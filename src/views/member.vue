@@ -3,15 +3,15 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 基础表格
+          <i class="el-icon-lx-cascades"></i> 用户列表
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
         <el-input
-          v-model="query.name"
-          placeholder="用户名"
+          v-model="query.keywords"
+          placeholder="ID/邮箱"
           class="handle-input mr10"
         ></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch"
@@ -31,37 +31,31 @@
           width="55"
           align="center"
         ></el-table-column>
-        <el-table-column prop="name" label="用户名"></el-table-column>
+        <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column label="账户余额">
-          <template #default="scope">￥{{ scope.row.money }}</template>
+          <template #default="scope">{{ scope.row.balance }}</template>
         </el-table-column>
-        <el-table-column label="头像(查看大图)" align="center">
-          <template #default="scope">
-            <el-image
-              class="table-td-thumb"
-              :src="scope.row.thumb"
-              :preview-src-list="[scope.row.thumb]"
-            >
-            </el-image>
-          </template>
+        <el-table-column label="佣金余额">
+          <template #default="scope">{{
+            scope.row.commissionBalance
+          }}</template>
         </el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
+        <el-table-column prop="id" label="邀请码"></el-table-column>
+        <el-table-column prop="account" label="账户"></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
             <el-tag
               :type="
-                scope.row.state === '成功'
+                scope.row.status == 1
                   ? 'success'
-                  : scope.row.state === '失败'
-                  ? 'danger'
-                  : ''
+                  : (scope.row.status = 0 ? 'danger' : '')
               "
-              >{{ scope.row.state }}</el-tag
+              >{{ scope.row.status == 1 ? "启用" : "禁用" }}</el-tag
             >
           </template>
         </el-table-column>
 
-        <el-table-column prop="date" label="注册时间"></el-table-column>
+        <el-table-column prop="createTime" label="注册时间"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template #default="scope">
             <el-button
@@ -95,11 +89,23 @@
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" v-model="editVisible" width="30%">
       <el-form label-width="70px">
-        <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
+        <el-form-item label="ID">
+          <el-input v-model="form.id" disabled></el-input>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
+        <el-form-item label="邮箱">
+          <el-input v-model="form.email"></el-input>
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="form.password"></el-input>
+        </el-form-item>
+        <el-form-item label="余额">
+          <el-input v-model="form.balance"></el-input>
+        </el-form-item>
+        <el-form-item label="佣金余额">
+          <el-input v-model="form.commissionBalance"></el-input>
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-switch v-model="form.status"></el-switch>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -122,7 +128,7 @@ export default {
   setup() {
     const ser = new Server();
     const query = reactive({
-      keyWord: "",
+      keywords: "",
       page: 1,
       size: 10,
     });
@@ -131,32 +137,39 @@ export default {
     // 获取表格数据
     const getData = () => {
       ser.page(query).then((res) => {
-        tableData.value = res.list;
-        pageTotal.value = res.pageTotal || 50;
+        console.log(res);
+        tableData.value = res.data.list;
+        pageTotal.value = res.data.pagination.total;
       });
     };
     getData();
 
     // 查询操作
     const handleSearch = () => {
-      query.pageIndex = 1;
+      query.page = 1;
       getData();
     };
     // 分页导航
     const handlePageChange = (val) => {
-      query.pageIndex = val;
+      query.page = val;
       getData();
     };
 
     // 删除操作
-    const handleDelete = (index) => {
+    const handleDelete = (index, rows) => {
       // 二次确认删除
       ElMessageBox.confirm("确定要删除吗？", "提示", {
         type: "warning",
       })
         .then(() => {
-          ElMessage.success("删除成功");
-          tableData.value.splice(index, 1);
+          ser.delete({ ids: rows.id }).then((res) => {
+            if (res.code == 1000) {
+              ElMessage.success(`删除成功`);
+              getData();
+            } else {
+              ElMessage.error(`删除失败:${res.message}`);
+            }
+          });
         })
         .catch(() => {});
     };
@@ -164,8 +177,13 @@ export default {
     // 表格编辑时弹窗和保存
     const editVisible = ref(false);
     let form = reactive({
-      name: "",
-      address: "",
+      id: 0,
+      email: "",
+      password: "",
+      balance: 0,
+      commissionBalance: 0,
+      status: 1,
+      code: "",
     });
     let idx = -1;
     const handleEdit = (index, row) => {
@@ -173,14 +191,24 @@ export default {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
+      if (row.status == true) form.status = true;
       editVisible.value = true;
     };
     const saveEdit = () => {
       editVisible.value = false;
-      ElMessage.success(`修改第 ${idx + 1} 行成功`);
-      Object.keys(form).forEach((item) => {
-        tableData.value[idx][item] = form[item];
+      form.status == true ? 1 : 0;
+      ser.update(form).then((res) => {
+        console.log(res);
+        if (res.code == 1000) {
+          ElMessage.success(`修改成功`);
+          getData();
+        } else {
+          ElMessage.error(`修改失败:${res.message}`);
+        }
       });
+      // Object.keys(form).forEach((item) => {
+      //   tableData.value[idx][item] = form[item];
+      // });
     };
 
     return {
