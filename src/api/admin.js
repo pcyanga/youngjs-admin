@@ -4,7 +4,7 @@ export class Server {
   host = "http://localhost:3001/";
   login(params) {
     return request({
-      url: `${this.host}admin/user/login`,
+      url: `admin/user/login`,
       method: "post",
       data: params,
     });

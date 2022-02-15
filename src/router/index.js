@@ -152,13 +152,13 @@ const routes = [
       },
 
       {
-        path: "/table2",
+        path: "/rate",
         name: "basetable2",
         meta: {
           title: "比例设置",
         },
         component: () =>
-          import(/* webpackChunkName: "table" */ "../views/BaseTable.vue"),
+          import(/* webpackChunkName: "table" */ "../views/rate.vue"),
       },
     ],
   },
