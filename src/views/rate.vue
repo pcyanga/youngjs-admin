@@ -81,7 +81,7 @@
 
     <!-- 添加弹出框 -->
     <el-dialog title="编辑" v-model="editVisible" width="50%">
-      <el-form label-width="70px">
+      <el-form label-width="100px">
         <el-form-item label="ID">
           <el-input v-model="form.id" disabled></el-input>
         </el-form-item>
@@ -104,22 +104,22 @@
           <el-input v-model="form.withdrawRate"></el-input>
         </el-form-item>
         <el-form-item label="邀请返利">
-          <el-col :span="1">lev1:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev1:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.inviteRate.lev1"
               placeholder="lev1"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev2:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev2:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.inviteRate.lev2"
               placeholder="lev2"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev3:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev3:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.inviteRate.lev3"
               placeholder="lev3"
@@ -127,22 +127,22 @@
           </el-col>
         </el-form-item>
         <el-form-item label="充值返利">
-          <el-col :span="1">lev1:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev1:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.rechargeRate.lev1"
               placeholder="lev1"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev2:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev2:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.rechargeRate.lev2"
               placeholder="lev2"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev3:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev3:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.rechargeRate.lev3"
               placeholder="lev3"
@@ -151,23 +151,21 @@
         </el-form-item>
         <el-form-item label="挖矿返利">
           <el-col :span="2">lev1:</el-col>
-          <el-col :span="2">
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.miningRate.lev1"
               placeholder="lev1"
             ></el-input>
           </el-col>
-          <el-col :span="2">,</el-col>
           <el-col :span="2">lev2:</el-col>
-          <el-col :span="2">
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.miningRate.lev2"
               placeholder="lev2"
             ></el-input>
           </el-col>
-          <el-col :span="2">,</el-col>
           <el-col :span="2">lev3:</el-col>
-          <el-col :span="2">
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.miningRate.lev3"
               placeholder="lev3"
@@ -184,7 +182,7 @@
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="添加" v-model="addVisible" width="50%">
-      <el-form label-width="70px">
+      <el-form label-width="100px">
         <el-form-item label="等级">
           <el-input v-model="form.levelId"></el-input>
         </el-form-item>
@@ -207,22 +205,22 @@
           <el-input v-model="form.withdrawRate"></el-input>
         </el-form-item>
         <el-form-item label="邀请返利">
-          <el-col :span="1">lev1:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev1:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.inviteRate.lev1"
               placeholder="lev1"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev2:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev2:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.inviteRate.lev2"
               placeholder="lev2"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev3:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev3:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.inviteRate.lev3"
               placeholder="lev3"
@@ -230,22 +228,22 @@
           </el-col>
         </el-form-item>
         <el-form-item label="充值返利">
-          <el-col :span="1">lev1:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev1:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.rechargeRate.lev1"
               placeholder="lev1"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev2:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev2:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.rechargeRate.lev2"
               placeholder="lev2"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev3:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev3:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.rechargeRate.lev3"
               placeholder="lev3"
@@ -253,22 +251,22 @@
           </el-col>
         </el-form-item>
         <el-form-item label="挖矿返利">
-          <el-col :span="1">lev1:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev1:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.miningRate.lev1"
               placeholder="lev1"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev2:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev2:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.miningRate.lev2"
               placeholder="lev2"
             ></el-input>
           </el-col>
-          <el-col :span="1">lev3:</el-col>
-          <el-col :span="2">
+          <el-col :span="2">lev3:</el-col>
+          <el-col :span="3" style="margin: 0 10px">
             <el-input
               v-model="form.miningRate.lev3"
               placeholder="lev3"
@@ -381,7 +379,6 @@ export default {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
-      console.log(form);
       if (form.inviteRate)
         form.inviteRate = JSON.parse(form.inviteRate || "{}");
       if (form.rechargeRate)

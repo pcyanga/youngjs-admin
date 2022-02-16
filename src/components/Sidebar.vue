@@ -59,7 +59,7 @@ export default {
       {
         icon: "el-icon-lx-home",
         index: "/dashboard",
-        title: "系统首页",
+        title: "首页",
       },
       {
         icon: "el-icon-lx-calendar",
@@ -92,6 +92,21 @@ export default {
           {
             index: "/profit",
             title: "财务明细",
+          },
+        ],
+      },
+      {
+        icon: "el-icon-lx-calendar",
+        index: "5",
+        title: "系统设置",
+        subs: [
+          {
+            index: "/account",
+            title: "TRX账号",
+          },
+          {
+            index: "/param",
+            title: "参数设置",
           },
         ],
       },
