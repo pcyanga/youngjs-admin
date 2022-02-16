@@ -9,6 +9,7 @@
     </div>
     <div class="container">
       <div class="handle-box">
+        <el-button type="primary" @click="handleSearch">刷新</el-button>
         <el-button type="primary" @click="handleAdd">添加</el-button>
       </div>
       <el-table
@@ -31,8 +32,23 @@
             >{{ scope.row.numberStart }} - {{ scope.row.numberEnd }}</template
           >
         </el-table-column>
-        <el-table-column prop="incomeRate" label="日收益%"></el-table-column>
+        <el-table-column prop="incomeRate" label="日收益%"> </el-table-column>
         <el-table-column prop="withdrawRate" label="日提款%"></el-table-column>
+        <el-table-column prop="inviteRate" label="邀请返利tx">
+          <template #default="scope">{{
+            handRate(scope.row.inviteRate)
+          }}</template>
+        </el-table-column>
+        <el-table-column prop="rechargeRate" label="充值返利%">
+          <template #default="scope">{{
+            handRate(scope.row.rechargeRate)
+          }}</template>
+        </el-table-column>
+        <el-table-column prop="miningRate" label="挖矿返利%">
+          <template #default="scope">{{
+            handRate(scope.row.miningRate)
+          }}</template>
+        </el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template #default="scope">
             <el-button
@@ -64,7 +80,7 @@
     </div>
 
     <!-- 添加弹出框 -->
-    <el-dialog title="添加" v-model="editVisible" width="30%">
+    <el-dialog title="编辑" v-model="editVisible" width="50%">
       <el-form label-width="70px">
         <el-form-item label="ID">
           <el-input v-model="form.id" disabled></el-input>
@@ -86,6 +102,77 @@
         </el-form-item>
         <el-form-item label="日提款">
           <el-input v-model="form.withdrawRate"></el-input>
+        </el-form-item>
+        <el-form-item label="邀请返利">
+          <el-col :span="1">lev1:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.inviteRate.lev1"
+              placeholder="lev1"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev2:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.inviteRate.lev2"
+              placeholder="lev2"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev3:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.inviteRate.lev3"
+              placeholder="lev3"
+            ></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="充值返利">
+          <el-col :span="1">lev1:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.rechargeRate.lev1"
+              placeholder="lev1"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev2:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.rechargeRate.lev2"
+              placeholder="lev2"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev3:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.rechargeRate.lev3"
+              placeholder="lev3"
+            ></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="挖矿返利">
+          <el-col :span="2">lev1:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.miningRate.lev1"
+              placeholder="lev1"
+            ></el-input>
+          </el-col>
+          <el-col :span="2">,</el-col>
+          <el-col :span="2">lev2:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.miningRate.lev2"
+              placeholder="lev2"
+            ></el-input>
+          </el-col>
+          <el-col :span="2">,</el-col>
+          <el-col :span="2">lev3:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.miningRate.lev3"
+              placeholder="lev3"
+            ></el-input>
+          </el-col>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -96,11 +183,8 @@
       </template>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="addVisible" width="30%">
+    <el-dialog title="添加" v-model="addVisible" width="50%">
       <el-form label-width="70px">
-        <el-form-item label="ID">
-          <el-input v-model="form.id" disabled></el-input>
-        </el-form-item>
         <el-form-item label="等级">
           <el-input v-model="form.levelId"></el-input>
         </el-form-item>
@@ -118,6 +202,78 @@
         </el-form-item>
         <el-form-item label="日提款">
           <el-input v-model="form.withdrawRate"></el-input>
+        </el-form-item>
+        <el-form-item label="日提款">
+          <el-input v-model="form.withdrawRate"></el-input>
+        </el-form-item>
+        <el-form-item label="邀请返利">
+          <el-col :span="1">lev1:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.inviteRate.lev1"
+              placeholder="lev1"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev2:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.inviteRate.lev2"
+              placeholder="lev2"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev3:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.inviteRate.lev3"
+              placeholder="lev3"
+            ></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="充值返利">
+          <el-col :span="1">lev1:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.rechargeRate.lev1"
+              placeholder="lev1"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev2:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.rechargeRate.lev2"
+              placeholder="lev2"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev3:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.rechargeRate.lev3"
+              placeholder="lev3"
+            ></el-input>
+          </el-col>
+        </el-form-item>
+        <el-form-item label="挖矿返利">
+          <el-col :span="1">lev1:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.miningRate.lev1"
+              placeholder="lev1"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev2:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.miningRate.lev2"
+              placeholder="lev2"
+            ></el-input>
+          </el-col>
+          <el-col :span="1">lev3:</el-col>
+          <el-col :span="2">
+            <el-input
+              v-model="form.miningRate.lev3"
+              placeholder="lev3"
+            ></el-input>
+          </el-col>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -149,7 +305,6 @@ export default {
     // 获取表格数据
     const getData = () => {
       ser.page(query).then((res) => {
-        console.log(res);
         res.data.list.forEach((l) => {
           l.createTime = moment(l.createTime).format("MM-DD HH:mm");
         });
@@ -158,7 +313,12 @@ export default {
       });
     };
     getData();
-
+    const handRate = (rate) => {
+      rate = JSON.parse(rate || "{}");
+      return `lev1:${rate.lev1 || 0},
+          lev2:${rate.lev2 || 0},
+          lev3:${rate.lev3 || 0}`;
+    };
     // 查询操作
     const handleSearch = () => {
       query.page = 1;
@@ -199,6 +359,21 @@ export default {
       numberEnd: 0,
       incomeRate: 0,
       withdrawRate: 0,
+      inviteRate: {
+        lev1: 0,
+        lev2: 0,
+        lev3: 0,
+      },
+      rechargeRate: {
+        lev1: 0,
+        lev2: 0,
+        lev3: 0,
+      },
+      miningRate: {
+        lev1: 0,
+        lev2: 0,
+        lev3: 0,
+      },
     });
     let idx = -1;
     const handleEdit = (index, row) => {
@@ -206,11 +381,20 @@ export default {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
+      console.log(form);
+      if (form.inviteRate)
+        form.inviteRate = JSON.parse(form.inviteRate || "{}");
+      if (form.rechargeRate)
+        form.rechargeRate = JSON.parse(form.rechargeRate || "{}");
+      if (form.miningRate)
+        form.miningRate = JSON.parse(form.miningRate || "{}");
       editVisible.value = true;
     };
     const saveEdit = () => {
       editVisible.value = false;
-      form.status == true ? 1 : 0;
+      form.inviteRate = JSON.stringify(form.inviteRate);
+      form.rechargeRate = JSON.stringify(form.rechargeRate);
+      form.miningRate = JSON.stringify(form.miningRate);
       ser.update(form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
@@ -225,6 +409,7 @@ export default {
     };
     const addVisible = ref(false);
     const handleAdd = () => {
+      form.id = undefined;
       addVisible.value = true;
     };
     const saveAdd = () => {
@@ -255,6 +440,7 @@ export default {
       addVisible,
       handleAdd,
       saveAdd,
+      handRate,
     };
   },
 };

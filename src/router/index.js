@@ -143,22 +143,39 @@ const routes = [
 
       {
         path: "/member",
-        name: "basetable1",
+        name: "member",
         meta: {
           title: "会员管理",
         },
         component: () =>
           import(/* webpackChunkName: "table" */ "../views/member.vue"),
       },
-
       {
         path: "/rate",
-        name: "basetable2",
+        name: "rate",
         meta: {
           title: "比例设置",
         },
         component: () =>
           import(/* webpackChunkName: "table" */ "../views/rate.vue"),
+      },
+      {
+        path: "/recharge",
+        name: "recharge",
+        meta: {
+          title: "充值列表",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/recharge.vue"),
+      },
+      {
+        path: "/withdraw",
+        name: "withdraw",
+        meta: {
+          title: "提现列表",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/withdraw.vue"),
       },
     ],
   },

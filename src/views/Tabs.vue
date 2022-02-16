@@ -1,12 +1,14 @@
 <template>
-    <div class="">
-        <div class="crumbs">
-            <el-breadcrumb separator="/">
-                <el-breadcrumb-item><i class="el-icon-lx-copy"></i> tab选项卡</el-breadcrumb-item>
-            </el-breadcrumb>
-        </div>
-        <div class="container">
-            <el-tabs v-model="message">
+  <div class="">
+    <div class="crumbs">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item
+          ><i class="el-icon-lx-copy"></i> tab选项卡</el-breadcrumb-item
+        >
+      </el-breadcrumb>
+    </div>
+    <div class="container">
+      <!-- <el-tabs v-model="message">
                 <el-tab-pane :label="`未读消息(${state.unread.length})`" name="first">
                     <el-table :data="state.unread" :show-header="false" style="width: 100%">
                         <el-table-column>
@@ -65,73 +67,73 @@
                         </div>
                     </template>
                 </el-tab-pane>
-            </el-tabs>
-        </div>
+            </el-tabs> -->
     </div>
+  </div>
 </template>
 
 <script>
 import { ref, reactive } from "vue";
 export default {
-    name: "tabs",
-    setup() {
-        const message = ref("first");
-        const state = reactive({
-            unread: [
-                {
-                    date: "2018-04-19 20:00:00",
-                    title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
-                },
-                {
-                    date: "2018-04-19 21:00:00",
-                    title: "今晚12点整发大红包，先到先得",
-                },
-            ],
-            read: [
-                {
-                    date: "2018-04-19 20:00:00",
-                    title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
-                },
-            ],
-            recycle: [
-                {
-                    date: "2018-04-19 20:00:00",
-                    title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
-                },
-            ],
-        });
+  name: "tabs",
+  setup() {
+    const message = ref("first");
+    const state = reactive({
+      unread: [
+        {
+          date: "2018-04-19 20:00:00",
+          title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
+        },
+        {
+          date: "2018-04-19 21:00:00",
+          title: "今晚12点整发大红包，先到先得",
+        },
+      ],
+      read: [
+        {
+          date: "2018-04-19 20:00:00",
+          title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
+        },
+      ],
+      recycle: [
+        {
+          date: "2018-04-19 20:00:00",
+          title: "【系统通知】该系统将于今晚凌晨2点到5点进行升级维护",
+        },
+      ],
+    });
 
-        const handleRead = (index) => {
-            const item = state.unread.splice(index, 1);
-            console.log(item);
-            state.read = item.concat(state.read);
-        };
-        const handleDel = (index) => {
-            const item = state.read.splice(index, 1);
-            state.recycle = item.concat(state.recycle);
-        };
-        const handleRestore = (index) => {
-            const item = state.recycle.splice(index, 1);
-            state.read = item.concat(state.read);
-        };
+    const handleRead = (index) => {
+      const item = state.unread.splice(index, 1);
+      console.log(item);
+      state.read = item.concat(state.read);
+    };
+    const handleDel = (index) => {
+      const item = state.read.splice(index, 1);
+      state.recycle = item.concat(state.recycle);
+    };
+    const handleRestore = (index) => {
+      const item = state.recycle.splice(index, 1);
+      state.read = item.concat(state.read);
+    };
 
-        return {
-            message,
-            state,
-            handleRead,
-            handleDel,
-            handleRestore,
-        };
-    },
+    return {
+      message,
+      state,
+      handleRead,
+      handleDel,
+      handleRestore,
+    };
+  },
 };
 </script>
 
 <style>
 .message-title {
-    cursor: pointer;
+  cursor: pointer;
 }
 .handle-row {
-    margin-top: 30px;
+  margin-top: 30px;
 }
 </style>
 

@@ -3,21 +3,13 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 用户列表
+          <i class="el-icon-lx-cascades"></i> 比例设置
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
         <el-button type="primary" @click="handleSearch">刷新</el-button>
-        <el-input
-          v-model="query.keywords"
-          placeholder="ID/邮箱"
-          class="handle-input mr10"
-        ></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
-          >搜索</el-button
-        >
       </div>
       <el-table
         :data="tableData"
@@ -25,6 +17,7 @@
         class="table"
         ref="multipleTable"
         header-cell-class-name="table-header"
+        @sort-change="changeTableSort"
       >
         <el-table-column
           prop="id"
@@ -32,45 +25,22 @@
           width="55"
           align="center"
         ></el-table-column>
-        <el-table-column prop="email" label="邮箱"></el-table-column>
-        <el-table-column label="账户余额">
-          <template #default="scope">{{ scope.row.balance }}</template>
+        <el-table-column prop="userId" label="用户ID"></el-table-column>
+        <el-table-column prop="fromAccount" label="充值账户"></el-table-column>
+        <el-table-column prop="toAccount" label="接收账户"></el-table-column>
+        <el-table-column label="充值金额">
+          <template #default="scope">{{ scope.row.amount }}</template>
         </el-table-column>
-        <el-table-column label="佣金余额">
-          <template #default="scope">{{
-            scope.row.commissionBalance
-          }}</template>
-        </el-table-column>
-        <el-table-column prop="id" label="邀请码"></el-table-column>
-        <el-table-column prop="address" label="账户"></el-table-column>
-        <el-table-column prop="levelId" label="等级"></el-table-column>
+        <el-table-column
+          prop="rechargeTime"
+          label="充值时间"
+          sortable="desc"
+        ></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
             <el-tag
-              :type="
-                scope.row.status == 1
-                  ? 'success'
-                  : (scope.row.status = 0 ? 'danger' : '')
-              "
-              >{{ scope.row.status == 1 ? "启用" : "禁用" }}</el-tag
-            >
-          </template>
-        </el-table-column>
-        <el-table-column prop="createTime" label="注册时间"></el-table-column>
-        <el-table-column label="操作" width="180" align="center">
-          <template #default="scope">
-            <el-button
-              type="text"
-              icon="el-icon-edit"
-              @click="handleEdit(scope.$index, scope.row)"
-              >编辑
-            </el-button>
-            <el-button
-              type="text"
-              icon="el-icon-delete"
-              class="red"
-              @click="handleDelete(scope.$index, scope.row)"
-              >删除</el-button
+              :type="scope.row.status == '已入账' ? 'success' : 'danger'"
+              >{{ scope.row.status }}</el-tag
             >
           </template>
         </el-table-column>
@@ -87,26 +57,29 @@
       </div>
     </div>
 
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="editVisible" width="30%">
+    <!-- 添加弹出框 -->
+    <el-dialog title="添加" v-model="editVisible" width="30%">
       <el-form label-width="70px">
         <el-form-item label="ID">
           <el-input v-model="form.id" disabled></el-input>
         </el-form-item>
-        <el-form-item label="邮箱">
-          <el-input v-model="form.email"></el-input>
+        <el-form-item label="等级">
+          <el-input v-model="form.levelId"></el-input>
         </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="form.password"></el-input>
+        <el-form-item label="等级名称">
+          <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="余额">
-          <el-input v-model="form.balance"></el-input>
+        <el-form-item label="充值金额起值">
+          <el-input v-model="form.numberStart"></el-input>
         </el-form-item>
-        <el-form-item label="佣金余额">
-          <el-input v-model="form.commissionBalance"></el-input>
+        <el-form-item label="充值金额始值">
+          <el-input v-model="form.numberEnd"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
-          <el-switch v-model="form.status"></el-switch>
+        <el-form-item label="日收益">
+          <el-input v-model="form.incomeRate"></el-input>
+        </el-form-item>
+        <el-form-item label="日提款">
+          <el-input v-model="form.withdrawRate"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -116,13 +89,45 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 编辑弹出框 -->
+    <el-dialog title="编辑" v-model="addVisible" width="30%">
+      <el-form label-width="70px">
+        <el-form-item label="ID">
+          <el-input v-model="form.id" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="等级">
+          <el-input v-model="form.levelId"></el-input>
+        </el-form-item>
+        <el-form-item label="等级名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="充值金额起值">
+          <el-input v-model="form.numberStart"></el-input>
+        </el-form-item>
+        <el-form-item label="充值金额始值">
+          <el-input v-model="form.numberEnd"></el-input>
+        </el-form-item>
+        <el-form-item label="日收益">
+          <el-input v-model="form.incomeRate"></el-input>
+        </el-form-item>
+        <el-form-item label="日提款">
+          <el-input v-model="form.withdrawRate"></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="addVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveAdd">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/user";
+import { Server } from "../api/recharge";
 import moment from "moment";
 export default {
   name: "basetable",
@@ -132,22 +137,39 @@ export default {
       keywords: "",
       page: 1,
       size: 10,
+      order: "",
     });
     const tableData = ref([]);
     const pageTotal = ref(0);
     // 获取表格数据
     const getData = () => {
       ser.page(query).then((res) => {
-        console.log(res);
         res.data.list.forEach((l) => {
-          l.createTime = moment(l.createTime).format("MM-DD HH:mm");
+          l.rechargeTime = moment(l.rechargeTime).format("MM-DD HH:mm:ss");
+          switch (Number(l.status)) {
+            case 0:
+              console.log(222);
+              l.status = "未匹配";
+              break;
+            case 1:
+              l.status = "已匹配";
+              break;
+            case 2:
+              l.status = "已入账";
+              break;
+          }
         });
         tableData.value = res.data.list;
         pageTotal.value = res.data.pagination.total;
       });
     };
     getData();
-
+    const changeTableSort = (column) => {
+      const sort = column.order == "descending" ? "desc" : "asc";
+      query.order = {};
+      query.order[column.prop] = sort;
+      getData();
+    };
     // 查询操作
     const handleSearch = () => {
       query.page = 1;
@@ -182,12 +204,12 @@ export default {
     const editVisible = ref(false);
     let form = reactive({
       id: 0,
-      email: "",
-      password: "",
-      balance: 0,
-      commissionBalance: 0,
-      status: 1,
-      code: "",
+      levelId: 1,
+      name: "",
+      numberStart: 0,
+      numberEnd: 0,
+      incomeRate: 0,
+      withdrawRate: 0,
     });
     let idx = -1;
     const handleEdit = (index, row) => {
@@ -195,14 +217,12 @@ export default {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
-      if (row.status == true) form.status = true;
       editVisible.value = true;
     };
     const saveEdit = () => {
       editVisible.value = false;
       form.status == true ? 1 : 0;
       ser.update(form).then((res) => {
-        console.log(res);
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
           getData();
@@ -214,7 +234,35 @@ export default {
       //   tableData.value[idx][item] = form[item];
       // });
     };
-
+    const addVisible = ref(false);
+    const handleAdd = () => {
+      addVisible.value = true;
+    };
+    const saveAdd = () => {
+      ser.add(form).then((res) => {
+        if (res.code == 1000) {
+          ElMessage.success(`添加成功`);
+          addVisible.value = false;
+          getData();
+        } else {
+          ElMessage.error(`添加失败:${res.message}`);
+        }
+      });
+      // Object.keys(form).forEach((item) => {
+      //   tableData.value[idx][item] = form[item];
+      // });
+    };
+    const dealStatus = (status) => {
+      console.log(status);
+      switch (Number(status)) {
+        case 0:
+          return "未匹配";
+        case 1:
+          return "已匹配";
+        case 2:
+          return "已入账";
+      }
+    };
     return {
       query,
       tableData,
@@ -226,6 +274,11 @@ export default {
       handleDelete,
       handleEdit,
       saveEdit,
+      addVisible,
+      handleAdd,
+      saveAdd,
+      dealStatus,
+      changeTableSort,
     };
   },
 };
