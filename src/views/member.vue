@@ -44,6 +44,9 @@
         <el-table-column prop="id" label="邀请码"></el-table-column>
         <el-table-column prop="address" label="账户"></el-table-column>
         <el-table-column prop="levelId" label="等级"></el-table-column>
+        <el-table-column prop="lev1" label="lev1"></el-table-column>
+        <el-table-column prop="lev2" label="lev2"></el-table-column>
+        <el-table-column prop="lev3" label="lev3"></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
             <el-tag

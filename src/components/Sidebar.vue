@@ -105,6 +105,10 @@ export default {
             title: "TRX账号",
           },
           {
+            index: "/notify",
+            title: "通告列表",
+          },
+          {
             index: "/param",
             title: "参数设置",
           },

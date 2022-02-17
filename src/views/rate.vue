@@ -109,6 +109,7 @@
             <el-input
               v-model="form.inviteRate.lev1"
               placeholder="lev1"
+              type="number"
             ></el-input>
           </el-col>
           <el-col :span="2">lev2:</el-col>
@@ -116,6 +117,7 @@
             <el-input
               v-model="form.inviteRate.lev2"
               placeholder="lev2"
+              type="number"
             ></el-input>
           </el-col>
           <el-col :span="2">lev3:</el-col>
@@ -123,6 +125,7 @@
             <el-input
               v-model="form.inviteRate.lev3"
               placeholder="lev3"
+              type="number"
             ></el-input>
           </el-col>
         </el-form-item>
@@ -132,6 +135,7 @@
             <el-input
               v-model="form.rechargeRate.lev1"
               placeholder="lev1"
+              type="number"
             ></el-input>
           </el-col>
           <el-col :span="2">lev2:</el-col>
@@ -139,6 +143,7 @@
             <el-input
               v-model="form.rechargeRate.lev2"
               placeholder="lev2"
+              type="number"
             ></el-input>
           </el-col>
           <el-col :span="2">lev3:</el-col>
@@ -146,6 +151,7 @@
             <el-input
               v-model="form.rechargeRate.lev3"
               placeholder="lev3"
+              type="number"
             ></el-input>
           </el-col>
         </el-form-item>
@@ -155,6 +161,7 @@
             <el-input
               v-model="form.miningRate.lev1"
               placeholder="lev1"
+              type="number"
             ></el-input>
           </el-col>
           <el-col :span="2">lev2:</el-col>
@@ -162,6 +169,7 @@
             <el-input
               v-model="form.miningRate.lev2"
               placeholder="lev2"
+              type="number"
             ></el-input>
           </el-col>
           <el-col :span="2">lev3:</el-col>
@@ -169,6 +177,7 @@
             <el-input
               v-model="form.miningRate.lev3"
               placeholder="lev3"
+              type="number"
             ></el-input>
           </el-col>
         </el-form-item>
@@ -379,16 +388,40 @@ export default {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
-      if (form.inviteRate)
-        form.inviteRate = JSON.parse(form.inviteRate || "{}");
-      if (form.rechargeRate)
-        form.rechargeRate = JSON.parse(form.rechargeRate || "{}");
-      if (form.miningRate)
-        form.miningRate = JSON.parse(form.miningRate || "{}");
+      console.log(form.inviteRate, form);
+      if (form.inviteRate && form.inviteRate != '""') {
+        form.inviteRate = JSON.parse(form.inviteRate);
+        console.log(2222);
+      } else {
+        form.inviteRate = {
+          lev1: 0,
+          lev2: 0,
+          lev3: 0,
+        };
+      }
+      if (form.rechargeRate && form.rechargeRate != '""') {
+        form.rechargeRate = JSON.parse(form.rechargeRate);
+      } else {
+        form.rechargeRate = {
+          lev1: 0,
+          lev2: 0,
+          lev3: 0,
+        };
+      }
+      if (form.miningRate && form.miningRate != '""') {
+        form.miningRate = JSON.parse(form.miningRate);
+      } else {
+        form.miningRate = {
+          lev1: 0,
+          lev2: 0,
+          lev3: 0,
+        };
+      }
       editVisible.value = true;
     };
     const saveEdit = () => {
       editVisible.value = false;
+      console.log(form);
       form.inviteRate = JSON.stringify(form.inviteRate);
       form.rechargeRate = JSON.stringify(form.rechargeRate);
       form.miningRate = JSON.stringify(form.miningRate);
@@ -410,6 +443,7 @@ export default {
       addVisible.value = true;
     };
     const saveAdd = () => {
+      console.log(form);
       ser.add(form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`添加成功`);
