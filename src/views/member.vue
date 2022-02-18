@@ -14,6 +14,7 @@
           v-model="query.keywords"
           placeholder="ID/邮箱"
           class="handle-input mr10"
+          clearable
         ></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch"
           >搜索</el-button
@@ -141,7 +142,6 @@ export default {
     // 获取表格数据
     const getData = () => {
       ser.page(query).then((res) => {
-        console.log(res);
         res.data.list.forEach((l) => {
           l.createTime = moment(l.createTime).format("MM-DD HH:mm");
         });

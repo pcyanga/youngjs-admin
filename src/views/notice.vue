@@ -3,17 +3,18 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 比例设置
+          <i class="el-icon-lx-cascades"></i> 通告设置
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
     <div class="container">
       <div class="handle-box">
         <el-button type="primary" @click="handleSearch">刷新</el-button>
+        <el-button type="primary" @click="handleAdd">添加</el-button>
         <el-input
-          v-model="query.userId"
-          placeholder="用户ID"
-          class="handle-input mr10 ml10"
+          v-model="query.keywords"
+          placeholder="内容"
+          class="handle-input mr10"
           clearable
         ></el-input>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch"
@@ -34,22 +35,22 @@
           width="55"
           align="center"
         ></el-table-column>
-        <el-table-column prop="userId" label="用户ID"></el-table-column>
-        <el-table-column prop="fromAccount" label="充值账户"></el-table-column>
-        <el-table-column prop="toAccount" label="接收账户"></el-table-column>
-        <el-table-column label="充值金额">
-          <template #default="scope">{{ scope.row.amount }}</template>
-        </el-table-column>
-        <el-table-column
-          prop="rechargeTime"
-          label="充值时间"
-          sortable="desc"
-        ></el-table-column>
-        <el-table-column label="状态" align="center">
+        <el-table-column prop="message" label="内容"></el-table-column>
+        <el-table-column prop="createTime" label="发布时间"></el-table-column>
+        <el-table-column label="操作" width="180" align="center">
           <template #default="scope">
-            <el-tag
-              :type="scope.row.status == '已入账' ? 'success' : 'danger'"
-              >{{ scope.row.status }}</el-tag
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.$index, scope.row)"
+              >编辑
+            </el-button>
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              class="red"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
             >
           </template>
         </el-table-column>
@@ -67,28 +68,10 @@
     </div>
 
     <!-- 添加弹出框 -->
-    <el-dialog title="添加" v-model="editVisible" width="30%">
+    <el-dialog title="编辑" v-model="editVisible" width="30%">
       <el-form label-width="70px">
-        <el-form-item label="ID">
-          <el-input v-model="form.id" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="等级">
-          <el-input v-model="form.levelId"></el-input>
-        </el-form-item>
-        <el-form-item label="等级名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="充值金额起值">
-          <el-input v-model="form.numberStart"></el-input>
-        </el-form-item>
-        <el-form-item label="充值金额始值">
-          <el-input v-model="form.numberEnd"></el-input>
-        </el-form-item>
-        <el-form-item label="日收益">
-          <el-input v-model="form.incomeRate"></el-input>
-        </el-form-item>
-        <el-form-item label="日提款">
-          <el-input v-model="form.withdrawRate"></el-input>
+        <el-form-item label="内容">
+          <el-input v-model="form.message"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -99,28 +82,10 @@
       </template>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="addVisible" width="30%">
+    <el-dialog title="添加" v-model="addVisible" width="30%">
       <el-form label-width="70px">
-        <el-form-item label="ID">
-          <el-input v-model="form.id" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="等级">
-          <el-input v-model="form.levelId"></el-input>
-        </el-form-item>
-        <el-form-item label="等级名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="充值金额起值">
-          <el-input v-model="form.numberStart"></el-input>
-        </el-form-item>
-        <el-form-item label="充值金额始值">
-          <el-input v-model="form.numberEnd"></el-input>
-        </el-form-item>
-        <el-form-item label="日收益">
-          <el-input v-model="form.incomeRate"></el-input>
-        </el-form-item>
-        <el-form-item label="日提款">
-          <el-input v-model="form.withdrawRate"></el-input>
+        <el-form-item label="内容">
+          <el-input v-model="form.message"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -136,7 +101,7 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/recharge";
+import { Server } from "../api/notice";
 import moment from "moment";
 export default {
   name: "basetable",
@@ -147,7 +112,6 @@ export default {
       page: 1,
       size: 10,
       order: "",
-      userId: "",
     });
     const tableData = ref([]);
     const pageTotal = ref(0);
@@ -155,19 +119,7 @@ export default {
     const getData = () => {
       ser.page(query).then((res) => {
         res.data.list.forEach((l) => {
-          l.rechargeTime = moment(l.rechargeTime).format("MM-DD HH:mm:ss");
-          switch (Number(l.status)) {
-            case 0:
-              console.log(222);
-              l.status = "未匹配";
-              break;
-            case 1:
-              l.status = "已匹配";
-              break;
-            case 2:
-              l.status = "已入账";
-              break;
-          }
+          l.createTime = moment(l.createTime).format("MM-DD HH:mm");
         });
         tableData.value = res.data.list;
         pageTotal.value = res.data.pagination.total;
@@ -214,12 +166,7 @@ export default {
     const editVisible = ref(false);
     let form = reactive({
       id: 0,
-      levelId: 1,
-      name: "",
-      numberStart: 0,
-      numberEnd: 0,
-      incomeRate: 0,
-      withdrawRate: 0,
+      message: "",
     });
     let idx = -1;
     const handleEdit = (index, row) => {
@@ -231,7 +178,6 @@ export default {
     };
     const saveEdit = () => {
       editVisible.value = false;
-      form.status == true ? 1 : 0;
       ser.update(form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);

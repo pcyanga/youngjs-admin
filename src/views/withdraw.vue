@@ -10,6 +10,15 @@
     <div class="container">
       <div class="handle-box">
         <el-button type="primary" @click="handleSearch">刷新</el-button>
+        <el-input
+          v-model="query.userId"
+          placeholder="用户ID"
+          class="handle-input mr10 ml10"
+          clearable
+        ></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+          >搜索</el-button
+        >
       </div>
       <el-table
         :data="tableData"
@@ -33,14 +42,32 @@
         </el-table-column>
         <el-table-column
           prop="rechargeTime"
-          label="充值时间"
+          label="到账时间"
           sortable="desc"
         ></el-table-column>
+        <el-table-column prop="reason" label="不通过原因"></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
             <el-tag
               :type="scope.row.status == '已入账' ? 'success' : 'danger'"
               >{{ scope.row.status }}</el-tag
+            >
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" width="180" align="center">
+          <template #default="scope">
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              @click="handlePass(scope.$index, scope.row)"
+              >打款
+            </el-button>
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              class="red"
+              @click="handleReject(scope.$index, scope.row)"
+              >不通过</el-button
             >
           </template>
         </el-table-column>
@@ -58,66 +85,19 @@
     </div>
 
     <!-- 添加弹出框 -->
-    <el-dialog title="添加" v-model="editVisible" width="30%">
+    <el-dialog title="填写不通过原因" v-model="rejectVisible" width="30%">
       <el-form label-width="70px">
         <el-form-item label="ID">
           <el-input v-model="form.id" disabled></el-input>
         </el-form-item>
-        <el-form-item label="等级">
-          <el-input v-model="form.levelId"></el-input>
-        </el-form-item>
-        <el-form-item label="等级名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="充值金额起值">
-          <el-input v-model="form.numberStart"></el-input>
-        </el-form-item>
-        <el-form-item label="充值金额始值">
-          <el-input v-model="form.numberEnd"></el-input>
-        </el-form-item>
-        <el-form-item label="日收益">
-          <el-input v-model="form.incomeRate"></el-input>
-        </el-form-item>
-        <el-form-item label="日提款">
-          <el-input v-model="form.withdrawRate"></el-input>
+        <el-form-item label="原因">
+          <el-input v-model="form.reason"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
-          <el-button @click="editVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveEdit">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="addVisible" width="30%">
-      <el-form label-width="70px">
-        <el-form-item label="ID">
-          <el-input v-model="form.id" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="等级">
-          <el-input v-model="form.levelId"></el-input>
-        </el-form-item>
-        <el-form-item label="等级名称">
-          <el-input v-model="form.name"></el-input>
-        </el-form-item>
-        <el-form-item label="充值金额起值">
-          <el-input v-model="form.numberStart"></el-input>
-        </el-form-item>
-        <el-form-item label="充值金额始值">
-          <el-input v-model="form.numberEnd"></el-input>
-        </el-form-item>
-        <el-form-item label="日收益">
-          <el-input v-model="form.incomeRate"></el-input>
-        </el-form-item>
-        <el-form-item label="日提款">
-          <el-input v-model="form.withdrawRate"></el-input>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="addVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveAdd">确 定</el-button>
+          <el-button @click="rejectVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveReject">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -138,6 +118,7 @@ export default {
       page: 1,
       size: 10,
       order: "",
+      userId: "",
     });
     const tableData = ref([]);
     const pageTotal = ref(0);
@@ -146,16 +127,22 @@ export default {
       ser.page(query).then((res) => {
         res.data.list.forEach((l) => {
           l.rechargeTime = moment(l.rechargeTime).format("MM-DD HH:mm:ss");
+          //0审核中 1审核通过 2提现成功 3审核失败 4提现失败
           switch (Number(l.status)) {
             case 0:
-              console.log(222);
-              l.status = "未匹配";
+              l.status = "审核中";
               break;
             case 1:
-              l.status = "已匹配";
+              l.status = "通过";
               break;
             case 2:
-              l.status = "已入账";
+              l.status = "提现成功";
+              break;
+            case 3:
+              l.status = "不通过";
+              break;
+            case 4:
+              l.status = "提现失败";
               break;
           }
         });
@@ -182,18 +169,18 @@ export default {
     };
 
     // 删除操作
-    const handleDelete = (index, rows) => {
+    const handlePass = (index, rows) => {
       // 二次确认删除
-      ElMessageBox.confirm("确定要删除吗？", "提示", {
+      ElMessageBox.confirm("确定要打款吗？", "提示", {
         type: "warning",
       })
         .then(() => {
-          ser.delete({ ids: rows.id }).then((res) => {
+          ser.update({ id: rows.id, status: 1 }).then((res) => {
             if (res.code == 1000) {
-              ElMessage.success(`删除成功`);
+              ElMessage.success(`后台打款中`);
               getData();
             } else {
-              ElMessage.error(`删除失败:${res.message}`);
+              ElMessage.error(`操作失败:${res.message}`);
             }
           });
         })
@@ -201,7 +188,7 @@ export default {
     };
 
     // 表格编辑时弹窗和保存
-    const editVisible = ref(false);
+    const rejectVisible = ref(false);
     let form = reactive({
       id: 0,
       levelId: 1,
@@ -212,24 +199,23 @@ export default {
       withdrawRate: 0,
     });
     let idx = -1;
-    const handleEdit = (index, row) => {
-      idx = index;
-      Object.keys(form).forEach((item) => {
-        form[item] = row[item];
-      });
-      editVisible.value = true;
+    const handleReject = (index, row) => {
+      form.id = row.id;
+      rejectVisible.value = true;
     };
-    const saveEdit = () => {
-      editVisible.value = false;
-      form.status == true ? 1 : 0;
-      ser.update(form).then((res) => {
-        if (res.code == 1000) {
-          ElMessage.success(`修改成功`);
-          getData();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
-        }
-      });
+    const saveReject = () => {
+      rejectVisible.value = false;
+      form.status = 3;
+      ser
+        .update({ status: 3, reason: form.reason, id: form.id })
+        .then((res) => {
+          if (res.code == 1000) {
+            ElMessage.success(`修改成功`);
+            getData();
+          } else {
+            ElMessage.error(`修改失败:${res.message}`);
+          }
+        });
       // Object.keys(form).forEach((item) => {
       //   tableData.value[idx][item] = form[item];
       // });
@@ -267,16 +253,13 @@ export default {
       query,
       tableData,
       pageTotal,
-      editVisible,
+      rejectVisible,
       form,
       handleSearch,
       handlePageChange,
-      handleDelete,
-      handleEdit,
-      saveEdit,
-      addVisible,
-      handleAdd,
-      saveAdd,
+      handlePass,
+      handleReject,
+      saveReject,
       dealStatus,
       changeTableSort,
     };
@@ -294,7 +277,7 @@ export default {
 }
 
 .handle-input {
-  width: 300px;
+  width: 200px;
   display: inline-block;
 }
 .table {
@@ -305,7 +288,7 @@ export default {
   color: #ff0000;
 }
 .mr10 {
-  margin-right: 10px;
+  margin: 0 10px;
 }
 .table-td-thumb {
   display: block;

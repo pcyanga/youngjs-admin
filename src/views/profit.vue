@@ -10,6 +10,14 @@
     <div class="container">
       <div class="handle-box">
         <el-button type="primary" @click="handleSearch">刷新</el-button>
+        <el-input
+          v-model="query.userId"
+          placeholder="用户ID"
+          class="handle-input mr10 ml10"
+        ></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+          >搜索</el-button
+        >
       </div>
       <el-table
         :data="tableData"
@@ -26,22 +34,33 @@
           align="center"
         ></el-table-column>
         <el-table-column prop="userId" label="用户ID"></el-table-column>
-        <el-table-column prop="fromAccount" label="充值账户"></el-table-column>
-        <el-table-column prop="toAccount" label="接收账户"></el-table-column>
-        <el-table-column label="充值金额">
-          <template #default="scope">{{ scope.row.amount }}</template>
-        </el-table-column>
         <el-table-column
-          prop="rechargeTime"
-          label="充值时间"
+          prop="sourceUserId"
+          label="来源用户ID"
+        ></el-table-column>
+        <el-table-column prop="amount" label="总金额"></el-table-column>
+        <el-table-column prop="balance" label="基础账户"></el-table-column>
+        <el-table-column
+          prop="commissionBalance"
+          label="佣金账户"
+        ></el-table-column>
+        <el-table-column
+          prop="createTime"
+          label="时间"
           sortable="desc"
         ></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
-            <el-tag
-              :type="scope.row.status == '已入账' ? 'success' : 'danger'"
-              >{{ scope.row.status }}</el-tag
-            >
+            <el-tag :type="scope.row.status == 1 ? 'success' : 'danger'">{{
+              showStatus(scope.row.status)
+            }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="场景" align="center">
+          <template #default="scope">
+            <el-tag :type="scope.row.status == 1 ? 'success' : 'danger'">{{
+              showScene(scope.row.scene)
+            }}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -127,7 +146,7 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/recharge";
+import { Server } from "../api/profit";
 import moment from "moment";
 export default {
   name: "basetable",
@@ -138,6 +157,7 @@ export default {
       page: 1,
       size: 10,
       order: "",
+      userId: "",
     });
     const tableData = ref([]);
     const pageTotal = ref(0);
@@ -146,22 +166,48 @@ export default {
       ser.page(query).then((res) => {
         res.data.list.forEach((l) => {
           l.rechargeTime = moment(l.rechargeTime).format("MM-DD HH:mm:ss");
-          switch (Number(l.status)) {
-            case 0:
-              console.log(222);
-              l.status = "未匹配";
-              break;
-            case 1:
-              l.status = "已匹配";
-              break;
-            case 2:
-              l.status = "已入账";
-              break;
-          }
+          // switch (Number(l.status)) {
+          //   case 0:
+          //     l.status = "未匹配";
+          //     break;
+          //   case 1:
+          //     l.status = "已匹配";
+          //     break;
+          //   case 2:
+          //     l.status = "已入账";
+          //     break;
+          // }
         });
         tableData.value = res.data.list;
         pageTotal.value = res.data.pagination.total;
       });
+    };
+    const showStatus = (status) => {
+      switch (status) {
+        case 0:
+          return "未领取";
+        case 1:
+          return "已入账";
+      }
+      return status;
+    };
+    //场景 1挖矿 2挖矿返利 3充值 4充值返利 5邀请返利
+    const showScene = (status) => {
+      switch (status) {
+        case 1:
+          return "挖矿";
+        case 2:
+          return "挖矿返利";
+        case 3:
+          return "充值";
+        case 4:
+          return "充值返利";
+        case 5:
+          return "邀请返利";
+        case 6:
+          return "注册礼金";
+      }
+      return status;
     };
     getData();
     const changeTableSort = (column) => {
@@ -279,6 +325,8 @@ export default {
       saveAdd,
       dealStatus,
       changeTableSort,
+      showStatus,
+      showScene,
     };
   },
 };
@@ -294,7 +342,7 @@ export default {
 }
 
 .handle-input {
-  width: 300px;
+  width: 200px;
   display: inline-block;
 }
 .table {
@@ -305,7 +353,7 @@ export default {
   color: #ff0000;
 }
 .mr10 {
-  margin-right: 10px;
+  margin: 0 10px;
 }
 .table-td-thumb {
   display: block;

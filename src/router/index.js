@@ -186,6 +186,33 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "table" */ "../views/profit.vue"),
       },
+      {
+        path: "/account",
+        name: "account",
+        meta: {
+          title: "TRX账号",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/account.vue"),
+      },
+      {
+        path: "/notice",
+        name: "notice",
+        meta: {
+          title: "通告设置",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/notice.vue"),
+      },
+      {
+        path: "/param",
+        name: "param",
+        meta: {
+          title: "参数设置",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/param.vue"),
+      },
     ],
   },
   {
@@ -205,7 +232,7 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  document.title = `${to.meta.title} | vue-manage-system`;
+  document.title = `${to.meta.title}`;
   const role = localStorage.getItem("ms_username");
   if (!role && to.path !== "/login") {
     next("/login");

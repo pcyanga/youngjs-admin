@@ -22,4 +22,11 @@ export class Server {
         throw new Error(err);
       });
   }
+  update(params) {
+    return request({
+      url: `admin/user/update`,
+      method: "post",
+      data: params,
+    });
+  }
 }
