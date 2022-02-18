@@ -34,17 +34,17 @@
         </el-table-column>
         <el-table-column prop="incomeRate" label="日收益%"> </el-table-column>
         <el-table-column prop="withdrawRate" label="日提款%"></el-table-column>
-        <el-table-column prop="inviteRate" label="邀请返利tx">
+        <el-table-column prop="inviteRate" label="邀请返利(TRX_">
           <template #default="scope">{{
             handRate(scope.row.inviteRate)
           }}</template>
         </el-table-column>
-        <el-table-column prop="rechargeRate" label="充值返利%">
+        <el-table-column prop="rechargeRate" label="充值返利(%)">
           <template #default="scope">{{
             handRate(scope.row.rechargeRate)
           }}</template>
         </el-table-column>
-        <el-table-column prop="miningRate" label="挖矿返利%">
+        <el-table-column prop="miningRate" label="挖矿返利(%)">
           <template #default="scope">{{
             handRate(scope.row.miningRate)
           }}</template>

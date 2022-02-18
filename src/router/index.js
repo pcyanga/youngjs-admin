@@ -177,6 +177,15 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "table" */ "../views/withdraw.vue"),
       },
+      {
+        path: "/profit",
+        name: "profit",
+        meta: {
+          title: "财务明细",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/profit.vue"),
+      },
     ],
   },
   {
