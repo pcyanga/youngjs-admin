@@ -34,7 +34,7 @@
         </el-table-column>
         <el-table-column prop="incomeRate" label="日收益%"> </el-table-column>
         <el-table-column prop="withdrawRate" label="日提款%"></el-table-column>
-        <el-table-column prop="inviteRate" label="邀请返利(TRX_">
+        <el-table-column prop="inviteRate" label="邀请返利(TRX)">
           <template #default="scope">{{
             handRate(scope.row.inviteRate)
           }}</template>
@@ -306,6 +306,7 @@ export default {
       keywords: "",
       page: 1,
       size: 10,
+      order: { levelId: "desc" },
     });
     const tableData = ref([]);
     const pageTotal = ref(0);

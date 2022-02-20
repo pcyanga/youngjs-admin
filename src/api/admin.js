@@ -1,7 +1,7 @@
 import axios from "axios";
 import request from "./server";
 export class Server {
-  host = "http://localhost:3001/";
+  host = "http://localhost:3005/";
   login(params) {
     return request({
       url: `admin/user/login`,
@@ -27,6 +27,12 @@ export class Server {
       url: `admin/user/update`,
       method: "post",
       data: params,
+    });
+  }
+  count() {
+    return request({
+      url: `admin/user/count`,
+      method: "get",
     });
   }
 }
