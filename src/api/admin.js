@@ -1,7 +1,7 @@
 import axios from "axios";
 import request from "./server";
 export class Server {
-  host = "http://localhost:3005/";
+  host = "/api/";
   login(params) {
     return request({
       url: `admin/user/login`,
