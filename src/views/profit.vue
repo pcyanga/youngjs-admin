@@ -34,6 +34,7 @@
           align="center"
         ></el-table-column>
         <el-table-column prop="userId" label="用户ID"></el-table-column>
+        <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column
           prop="sourceUserId"
           label="来源用户ID"
@@ -156,7 +157,7 @@ export default {
       keywords: "",
       page: 1,
       size: 10,
-      order: "",
+      order: { createTime: "desc" },
       userId: "",
     });
     const tableData = ref([]);
