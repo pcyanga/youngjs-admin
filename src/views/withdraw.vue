@@ -41,11 +41,7 @@
         <el-table-column label="充值金额">
           <template #default="scope">{{ scope.row.amount }}</template>
         </el-table-column>
-        <el-table-column
-          prop="rechargeTime"
-          label="到账时间"
-          sortable="desc"
-        ></el-table-column>
+        <el-table-column prop="rechargeTime" label="到账时间"></el-table-column>
         <el-table-column prop="reason" label="不通过原因"></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
@@ -55,6 +51,7 @@
             >
           </template>
         </el-table-column>
+        <el-table-column prop="createTime" label="申请时间"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template #default="scope">
             <el-button
@@ -128,6 +125,7 @@ export default {
       ser.page(query).then((res) => {
         res.data.list.forEach((l) => {
           l.rechargeTime = moment(l.rechargeTime).format("MM-DD HH:mm:ss");
+          l.createTime = moment(l.createTime).format("MM-DD HH:mm:ss");
           //0审核中 1审核通过 2提现成功 3审核失败 4提现失败
           switch (Number(l.status)) {
             case 0:
