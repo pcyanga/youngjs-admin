@@ -35,6 +35,7 @@
           align="center"
         ></el-table-column>
         <el-table-column prop="userId" label="用户ID"></el-table-column>
+        <el-table-column prop="email" label="邮箱"></el-table-column>
         <el-table-column prop="fromAccount" label="充值账户"></el-table-column>
         <el-table-column prop="toAccount" label="接收账户"></el-table-column>
         <el-table-column label="充值金额">
@@ -146,7 +147,7 @@ export default {
       keywords: "",
       page: 1,
       size: 10,
-      order: "",
+      order: { createTime: "desc" },
       userId: "",
     });
     const tableData = ref([]);
@@ -154,6 +155,7 @@ export default {
     // 获取表格数据
     const getData = () => {
       ser.page(query).then((res) => {
+        console.log(res);
         res.data.list.forEach((l) => {
           l.rechargeTime = moment(l.rechargeTime).format("MM-DD HH:mm:ss");
           switch (Number(l.status)) {
