@@ -46,7 +46,7 @@
         <el-table-column label="状态" align="center">
           <template #default="scope">
             <el-tag
-              :type="scope.row.status == '已入账' ? 'success' : 'danger'"
+              :type="scope.row.status == '提现成功' ? 'success' : 'danger'"
               >{{ scope.row.status }}</el-tag
             >
           </template>
