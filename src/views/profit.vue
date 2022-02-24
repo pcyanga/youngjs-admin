@@ -196,9 +196,9 @@ export default {
     const showScene = (status) => {
       switch (status) {
         case 1:
-          return "挖矿";
+          return "量化交易收入";
         case 2:
-          return "挖矿返利";
+          return "量化交易返利";
         case 3:
           return "充值";
         case 4:
@@ -207,6 +207,10 @@ export default {
           return "邀请返利";
         case 6:
           return "注册礼金";
+        case 7:
+          return "提现";
+        case 8:
+          return "转到基础账户";
       }
       return status;
     };

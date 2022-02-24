@@ -29,7 +29,7 @@
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="balance" label="余额"></el-table-column>
         <el-table-column prop="address" label="地址"></el-table-column>
-        <el-table-column prop="privaryKey" label="密钥"></el-table-column>
+        <el-table-column prop="privateKey" label="密钥"></el-table-column>
         <el-table-column prop="updateTime" label="更新时间"></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
@@ -78,7 +78,7 @@
           <el-input v-model="form.address"></el-input>
         </el-form-item>
         <el-form-item label="密钥">
-          <el-input v-model="form.privaryKey"></el-input>
+          <el-input v-model="form.privateKey"></el-input>
         </el-form-item>
         <el-form-item label="状态">
           <el-switch v-model="form.status"></el-switch>
@@ -101,7 +101,7 @@
           <el-input v-model="form.address"></el-input>
         </el-form-item>
         <el-form-item label="密钥">
-          <el-input v-model="form.privaryKey"></el-input>
+          <el-input v-model="form.privateKey"></el-input>
         </el-form-item>
         <el-form-item label="状态">
           <el-switch v-model="form.status"></el-switch>
@@ -187,7 +187,7 @@ export default {
       id: 0,
       name: "",
       address: "",
-      privaryKey: "",
+      privateKey: "",
       status: true,
     });
     let idx = -1;
