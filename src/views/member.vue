@@ -48,16 +48,21 @@
         <el-table-column prop="lev1" label="lev1"></el-table-column>
         <el-table-column prop="lev2" label="lev2"></el-table-column>
         <el-table-column prop="lev3" label="lev3"></el-table-column>
+        <el-table-column prop="ip" label="ip"></el-table-column>
+        <el-table-column prop="ipAddr" label="ip地址"></el-table-column>
+        <el-table-column
+          prop="googleSecret"
+          label="谷歌验证码"
+        ></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
-            <el-tag
-              :type="
-                scope.row.status == 1
-                  ? 'success'
-                  : (scope.row.status = 0 ? 'danger' : '')
-              "
-              >{{ scope.row.status == 1 ? "启用" : "禁用" }}</el-tag
-            >
+            <el-tag :type="scope.row.status == 1 ? 'success' : 'danger'">{{
+              scope.row.status == 1
+                ? "启用"
+                : scope.row.status == 2
+                ? "禁IP"
+                : "禁用"
+            }}</el-tag>
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="注册时间"></el-table-column>
@@ -109,8 +114,15 @@
         <el-form-item label="佣金余额">
           <el-input v-model="form.commissionBalance"></el-input>
         </el-form-item>
-        <el-form-item label="状态" prop="status">
+        <!-- <el-form-item label="状态" prop="status">
           <el-switch v-model="form.status"></el-switch>
+        </el-form-item> -->
+        <el-form-item label="状态">
+          <el-radio-group v-model="form.status">
+            <el-radio :label="0">禁用</el-radio>
+            <el-radio :label="1">正常</el-radio>
+            <el-radio :label="2">禁IP</el-radio>
+          </el-radio-group>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -198,12 +210,14 @@ export default {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
-      if (row.status == true) form.status = true;
+      // if (row.status == true) form.status = true;
+      form.status = Number(form.status);
+      form.password = "";
       editVisible.value = true;
     };
     const saveEdit = () => {
       editVisible.value = false;
-      form.status == true ? 1 : 0;
+      // form.status == true ? 1 : 0;
       ser.update(form).then((res) => {
         console.log(res);
         if (res.code == 1000) {
