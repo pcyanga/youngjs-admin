@@ -57,6 +57,7 @@
           prop="googleSecret"
           label="谷歌验证码"
         ></el-table-column>
+        <el-table-column prop="createTime" label="注册时间"></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
             <el-tag :type="scope.row.status == 1 ? 'success' : 'danger'">{{
@@ -68,8 +69,7 @@
             }}</el-tag>
           </template>
         </el-table-column>
-        <el-table-column prop="createTime" label="注册时间"></el-table-column>
-        <el-table-column label="状态" align="center">
+        <el-table-column label="提现状态" align="center">
           <template #default="scope">
             <el-tag
               :type="scope.row.withdrawStatus == 1 ? 'success' : 'danger'"
