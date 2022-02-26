@@ -69,6 +69,16 @@
           </template>
         </el-table-column>
         <el-table-column prop="createTime" label="注册时间"></el-table-column>
+        <el-table-column label="状态" align="center">
+          <template #default="scope">
+            <el-tag
+              :type="scope.row.withdrawStatus == 1 ? 'success' : 'danger'"
+              >{{
+                scope.row.withdrawStatus == 1 ? "可提现" : "不可提现"
+              }}</el-tag
+            >
+          </template>
+        </el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template #default="scope">
             <el-button
@@ -132,6 +142,9 @@
             <el-radio :label="1">正常</el-radio>
             <el-radio :label="2">禁IP</el-radio>
           </el-radio-group>
+        </el-form-item>
+        <el-form-item label="提现状态" prop="withdrawStatus">
+          <el-switch v-model="form.withdrawStatus"></el-switch>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -271,11 +284,13 @@ export default {
       });
       // if (row.status == true) form.status = true;
       form.status = Number(form.status);
+      form.withdrawStatus = form.withdrawStatus ? true : false;
       form.password = "";
       editVisible.value = true;
     };
     const saveEdit = () => {
       editVisible.value = false;
+      form.withdrawStatus == true ? 1 : 0;
       // form.status == true ? 1 : 0;
       ser.update(form).then((res) => {
         console.log(res);
