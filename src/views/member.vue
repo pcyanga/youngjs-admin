@@ -50,6 +50,9 @@
         <el-table-column prop="lev3" label="lev3"></el-table-column>
         <el-table-column prop="ip" label="ip"></el-table-column>
         <el-table-column prop="ipAddr" label="ip地址"></el-table-column>
+        <el-table-column prop="recharge" label="总充值"></el-table-column>
+        <el-table-column prop="withdraw" label="总提现"></el-table-column>
+
         <el-table-column
           prop="googleSecret"
           label="谷歌验证码"
@@ -73,6 +76,12 @@
               icon="el-icon-edit"
               @click="handleEdit(scope.$index, scope.row)"
               >编辑
+            </el-button>
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              @click="handleTeam(scope.row)"
+              >查看下级
             </el-button>
             <el-button
               type="text"
@@ -131,6 +140,56 @@
           <el-button type="primary" @click="saveEdit">确 定</el-button>
         </span>
       </template>
+    </el-dialog>
+    <!-- 编辑弹出框 -->
+    <el-dialog title="团队" v-model="teamVisible" width="60%">
+      <div class="handle-box" @change="handleTeamChange">
+        <el-radio-group v-model="query1.lev">
+          <el-radio-button label="1">lev1</el-radio-button>
+          <el-radio-button label="2">lev2</el-radio-button>
+          <el-radio-button label="3">lev3</el-radio-button>
+        </el-radio-group>
+      </div>
+      <el-table
+        :data="tableData1"
+        border
+        class="table"
+        ref="multipleTable"
+        header-cell-class-name="table-header"
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          width="55"
+          align="center"
+        ></el-table-column>
+        <el-table-column prop="email" label="邮箱"></el-table-column>
+        <el-table-column label="账户余额">
+          <template #default="scope">{{ scope.row.balance }}</template>
+        </el-table-column>
+        <el-table-column label="佣金余额">
+          <template #default="scope">{{
+            scope.row.commissionBalance
+          }}</template>
+        </el-table-column>
+        <el-table-column prop="levelId" label="等级"></el-table-column>
+        <el-table-column prop="recharge" label="充值金额"></el-table-column>
+        <el-table-column prop="withdraw" label="提现金额"></el-table-column>
+      </el-table>
+      <div class="pagination">
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :current-page="query1.page"
+          :page-size="query1.size"
+          :total="pageTotal1"
+          @current-change="handlePageChange"
+        ></el-pagination>
+      </div>
+      <div>
+        总计：充值:<span class="amount">{{ subData.recharge }}</span
+        >，提现:<span class="amount">{{ subData.withdraw }}</span>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -231,7 +290,38 @@ export default {
       //   tableData.value[idx][item] = form[item];
       // });
     };
-
+    const teamVisible = ref(false);
+    const tableData1 = ref([]);
+    const pageTotal1 = ref(0);
+    const query1 = reactive({
+      lev: 1,
+      page: 1,
+      size: 10,
+      userId: 0,
+    });
+    const handleTeam = (data) => {
+      query1.userId = data.id;
+      handleTeamChange();
+    };
+    let subData = {
+      recharge: 0,
+      withdraw: 0,
+    };
+    const handleTeamChange = () => {
+      ser.team(query1).then((res) => {
+        if (res.code == 1000) {
+          subData.recharge = res.data.subData.recharge;
+          subData.withdraw = res.data.subData.withdraw;
+          tableData1.value = res.data.list;
+          pageTotal1.value = res.data.pagination.total;
+          query1.size = res.data.pagination.size;
+          query1.page = res.data.pagination.page;
+          teamVisible.value = true;
+        } else {
+          ElMessage.error(`获取失败:${res.message}`);
+        }
+      });
+    };
     return {
       query,
       tableData,
@@ -243,6 +333,13 @@ export default {
       handleDelete,
       handleEdit,
       saveEdit,
+      teamVisible,
+      handleTeam,
+      tableData1,
+      pageTotal1,
+      query1,
+      handleTeamChange,
+      subData,
     };
   },
 };
@@ -252,7 +349,10 @@ export default {
 .handle-box {
   margin-bottom: 20px;
 }
-
+.amount {
+  color: red;
+  font-size: 20px;
+}
 .handle-select {
   width: 120px;
 }

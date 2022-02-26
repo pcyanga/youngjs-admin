@@ -23,4 +23,11 @@ export class Server {
       data: params,
     });
   }
+  team(params) {
+    return request({
+      url: `admin/member/team`,
+      method: "get",
+      params,
+    });
+  }
 }
