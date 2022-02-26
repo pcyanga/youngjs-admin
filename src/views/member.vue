@@ -46,8 +46,8 @@
         <el-table-column prop="address" label="账户"></el-table-column>
         <el-table-column prop="levelId" label="等级"></el-table-column>
         <el-table-column prop="lev1" label="lev1"></el-table-column>
-        <el-table-column prop="lev2" label="lev2"></el-table-column>
-        <el-table-column prop="lev3" label="lev3"></el-table-column>
+        <!-- <el-table-column prop="lev2" label="lev2"></el-table-column>
+        <el-table-column prop="lev3" label="lev3"></el-table-column> -->
         <el-table-column prop="ip" label="ip"></el-table-column>
         <el-table-column prop="ipAddr" label="ip地址"></el-table-column>
         <el-table-column prop="recharge" label="总充值"></el-table-column>
@@ -97,8 +97,8 @@
         <el-pagination
           background
           layout="total, prev, pager, next"
-          :current-page="query.pageIndex"
-          :page-size="query.pageSize"
+          :current-page="query.page"
+          :page-size="query.size"
           :total="pageTotal"
           @current-change="handlePageChange"
         ></el-pagination>
