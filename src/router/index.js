@@ -203,6 +203,15 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "table" */ "../views/param.vue"),
       },
+      {
+        path: "/user",
+        name: "user",
+        meta: {
+          title: "用户列表",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/admin.vue"),
+      },
     ],
   },
   {

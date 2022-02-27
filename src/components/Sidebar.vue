@@ -98,7 +98,7 @@ export default {
       {
         icon: "el-icon-lx-calendar",
         index: "5",
-        title: "系统设置",
+        title: "其他设置",
         subs: [
           {
             index: "/account",
@@ -111,6 +111,25 @@ export default {
           {
             index: "/param",
             title: "参数设置",
+          },
+        ],
+      },
+      {
+        icon: "el-icon-lx-calendar",
+        index: "6",
+        title: "系统设置",
+        subs: [
+          {
+            index: "/user",
+            title: "用户列表",
+          },
+          {
+            index: "/notice",
+            title: "角色列表",
+          },
+          {
+            index: "/param",
+            title: "菜单设置",
           },
         ],
       },
