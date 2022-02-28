@@ -1,7 +1,7 @@
 import axios from "axios";
 import request from "./server";
 export class Server {
-  host = "/api/";
+  host = "http://localhost:3005/";
   login(params) {
     return request({
       url: `admin/user/login`,
@@ -29,10 +29,24 @@ export class Server {
       data: params,
     });
   }
+  page(params) {
+    return request({
+      url: `admin/user/page`,
+      method: "post",
+      data: params,
+    });
+  }
   count() {
     return request({
       url: `admin/user/count`,
       method: "get",
+    });
+  }
+  getRoles(params) {
+    return request({
+      url: `admin/role/list`,
+      method: "post",
+      data: params,
     });
   }
 }

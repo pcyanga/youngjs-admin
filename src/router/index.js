@@ -212,6 +212,24 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "table" */ "../views/admin.vue"),
       },
+      {
+        path: "/role",
+        name: "role",
+        meta: {
+          title: "角色列表",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/role.vue"),
+      },
+      {
+        path: "/menu",
+        name: "menu",
+        meta: {
+          title: "菜单列表",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/menu.vue"),
+      },
     ],
   },
   {

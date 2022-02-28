@@ -61,59 +61,59 @@ export default {
         index: "/dashboard",
         title: "首页",
       },
-      {
-        icon: "el-icon-lx-calendar",
-        index: "3",
-        title: "会员管理",
-        subs: [
-          {
-            index: "/member",
-            title: "会员列表",
-          },
-          {
-            index: "/rate",
-            title: "比例设置",
-          },
-        ],
-      },
-      {
-        icon: "el-icon-lx-calendar",
-        index: "4",
-        title: "财务管理",
-        subs: [
-          {
-            index: "/recharge",
-            title: "充值列表",
-          },
-          {
-            index: "/withdraw",
-            title: "提现列表",
-          },
-          {
-            index: "/profit",
-            title: "财务明细",
-          },
-        ],
-      },
-      {
-        icon: "el-icon-lx-calendar",
-        index: "5",
-        title: "其他设置",
-        subs: [
-          {
-            index: "/account",
-            title: "TRX账号",
-          },
-          {
-            index: "/notice",
-            title: "通告列表",
-          },
-          {
-            index: "/param",
-            title: "参数设置",
-          },
-        ],
-      },
+      // {
+      //   icon: "el-icon-lx-calendar",
+      //   index: "3",
+      //   title: "会员管理",
+      //   subs: [
+      //     {
+      //       index: "/member",
+      //       title: "会员列表",
+      //     },
+      //     {
+      //       index: "/rate",
+      //       title: "比例设置",
+      //     },
+      //   ],
+      // },
+      // {
+      //   icon: "el-icon-lx-calendar",
+      //   index: "4",
+      //   title: "财务管理",
+      //   subs: [
+      //     {
+      //       index: "/recharge",
+      //       title: "充值列表",
+      //     },
+      //     {
+      //       index: "/withdraw",
+      //       title: "提现列表",
+      //     },
+      //     {
+      //       index: "/profit",
+      //       title: "财务明细",
+      //     },
+      //   ],
+      // },
+      // {
+      //   icon: "el-icon-lx-calendar",
+      //   index: "5",
+      //   title: "其他设置",
+      //   subs: [
+      //     {
+      //       index: "/account",
+      //       title: "TRX账号",
+      //     },
+      //     {
+      //       index: "/notice",
+      //       title: "通告列表",
+      //     },
+      //     {
+      //       index: "/param",
+      //       title: "参数设置",
+      //     },
+      //   ],
+      // },
       {
         icon: "el-icon-lx-calendar",
         index: "6",
@@ -124,11 +124,11 @@ export default {
             title: "用户列表",
           },
           {
-            index: "/notice",
+            index: "/role",
             title: "角色列表",
           },
           {
-            index: "/param",
+            index: "/menu",
             title: "菜单设置",
           },
         ],

@@ -1,0 +1,317 @@
+<template>
+  <div>
+    <div class="crumbs">
+      <el-breadcrumb separator="/">
+        <el-breadcrumb-item>
+          <i class="el-icon-lx-cascades"></i> 角色列表
+        </el-breadcrumb-item>
+      </el-breadcrumb>
+    </div>
+    <div class="container">
+      <div class="handle-box">
+        <el-button type="primary" @click="handleSearch">刷新</el-button>
+        <el-button type="primary" @click="handleAdd">添加</el-button>
+        <el-input
+          v-model="query.keywords"
+          placeholder="角色"
+          class="handle-input mr10"
+          clearable
+        ></el-input>
+        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+          >搜索</el-button
+        >
+      </div>
+      <el-table
+        :data="tableData"
+        border
+        class="table"
+        ref="multipleTable"
+        header-cell-class-name="table-header"
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          width="55"
+          align="center"
+        ></el-table-column>
+        <el-table-column prop="rolename" label="角色名称"></el-table-column>
+        <el-table-column prop="createTime" label="创建时间"></el-table-column>
+        <el-table-column label="操作" width="180" align="center">
+          <template #default="scope">
+            <el-button
+              type="text"
+              icon="el-icon-edit"
+              @click="handleEdit(scope.$index, scope.row)"
+              >编辑
+            </el-button>
+            <el-button
+              type="text"
+              icon="el-icon-delete"
+              class="red"
+              @click="handleDelete(scope.$index, scope.row)"
+              >删除</el-button
+            >
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagination">
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :current-page="query.page"
+          :page-size="query.size"
+          :total="pageTotal"
+          @current-change="handlePageChange"
+        ></el-pagination>
+      </div>
+    </div>
+
+    <!-- 编辑弹出框 -->
+    <el-dialog title="编辑" v-model="editVisible" width="30%">
+      <el-form label-width="70px">
+        <el-form-item label="ID">
+          <el-input v-model="form.id" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="角色名称">
+          <el-input v-model="form.rolename"></el-input>
+        </el-form-item>
+        <el-form-item label="菜单设置">
+          <el-tree
+            :data="data"
+            ref="tree"
+            show-checkbox
+            node-key="id"
+            :default-expanded-keys="[]"
+            :default-checked-keys="check"
+            :props="defaultProps"
+          >
+          </el-tree>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="editVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!-- 编辑弹出框 -->
+    <el-dialog title="添加" v-model="addVisible" width="30%">
+      <el-form label-width="70px">
+        <el-form-item label="ID">
+          <el-input v-model="form.id" disabled></el-input>
+        </el-form-item>
+        <el-form-item label="角色名称">
+          <el-input v-model="form.rolename"></el-input>
+        </el-form-item>
+        <el-form-item label="菜单设置">
+          <el-tree
+            :data="data"
+            ref="tree"
+            show-checkbox
+            node-key="id"
+            :default-expanded-keys="[]"
+            :default-checked-keys="check"
+            :props="defaultProps"
+          >
+          </el-tree>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="addVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveAdd">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import { ref, reactive } from "vue";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { Server } from "../api/role";
+import moment from "moment";
+export default {
+  name: "basetable",
+  setup() {
+    const ser = new Server();
+    const query = reactive({
+      keywords: "",
+      page: 1,
+      size: 10,
+    });
+    const tableData = ref([]);
+    const pageTotal = ref(0);
+    // 获取表格数据
+    const getData = () => {
+      ser.page(query).then((res) => {
+        res.data.list.forEach((l) => {
+          l.createTime = moment(l.createTime).format("MM-DD HH:mm");
+        });
+        tableData.value = res.data.list;
+        pageTotal.value = res.data.pagination.total;
+      });
+    };
+    getData();
+
+    // 查询操作
+    const handleSearch = () => {
+      query.page = 1;
+      getData();
+    };
+    // 分页导航
+    const handlePageChange = (val) => {
+      query.page = val;
+      getData();
+    };
+
+    // 删除操作
+    const handleDelete = (index, rows) => {
+      // 二次确认删除
+      ElMessageBox.confirm("确定要删除吗？", "提示", {
+        type: "warning",
+      })
+        .then(() => {
+          ser.delete({ ids: rows.id }).then((res) => {
+            if (res.code == 1000) {
+              ElMessage.success(`删除成功`);
+              getData();
+            } else {
+              ElMessage.error(`删除失败:${res.message}`);
+            }
+          });
+        })
+        .catch(() => {});
+    };
+
+    // 表格编辑时弹窗和保存
+    const editVisible = ref(false);
+    let form = reactive({
+      id: 0,
+      rolename: "",
+      menuIds: [],
+    });
+    let idx = -1;
+    const handleEdit = (index, row) => {
+      getAllMenu();
+      getRoleMenu(row.id);
+      idx = index;
+      Object.keys(form).forEach((item) => {
+        form[item] = row[item];
+      });
+      editVisible.value = true;
+    };
+    const tree = ref();
+    const saveEdit = () => {
+      editVisible.value = false;
+      form.menuIds = tree.value.getCheckedKeys();
+      ser.update(form).then((res) => {
+        if (res.code == 1000) {
+          ElMessage.success(`修改成功`);
+          getData();
+        } else {
+          ElMessage.error(`修改失败:${res.message}`);
+        }
+      });
+    };
+    const addVisible = ref(false);
+    const handleAdd = () => {
+      getAllMenu();
+      check.value = [];
+      form.id = 0;
+      form.rolename = "";
+      addVisible.value = true;
+    };
+    const saveAdd = () => {
+      form.menuIds = tree.value.getCheckedKeys();
+      ser.add(form).then((res) => {
+        if (res.code == 1000) {
+          ElMessage.success(`添加成功`);
+          addVisible.value = false;
+          getData();
+        } else {
+          ElMessage.error(`添加失败:${res.message}`);
+        }
+      });
+    };
+    const data = ref([]);
+    const check = ref([]);
+    const getRoleMenu = (roleId) => {
+      ser.getRoleMenu({ roleId }).then((res) => {
+        if (res.code == 1000) {
+          check.value = res.data;
+        } else {
+          ElMessage.error(`菜单获取失败:${res.message}`);
+        }
+      });
+    };
+    const getAllMenu = () => {
+      ser.getAllMenu().then((res) => {
+        if (res.code == 1000) {
+          data.value = res.data;
+        } else {
+          ElMessage.error(`菜单获取失败:${res.message}`);
+        }
+      });
+    };
+    const defaultProps = {
+      children: "children",
+      label: "label",
+    };
+    return {
+      query,
+      tableData,
+      pageTotal,
+      editVisible,
+      form,
+      handleSearch,
+      handlePageChange,
+      handleDelete,
+      handleEdit,
+      saveEdit,
+      addVisible,
+      handleAdd,
+      saveAdd,
+      data,
+      defaultProps,
+      check,
+      tree,
+    };
+  },
+};
+</script>
+
+<style scoped>
+.handle-box {
+  margin-bottom: 20px;
+}
+.amount {
+  color: red;
+  font-size: 20px;
+}
+.handle-select {
+  width: 120px;
+}
+
+.handle-input {
+  width: 300px;
+  display: inline-block;
+}
+.table {
+  width: 100%;
+  font-size: 14px;
+}
+.red {
+  color: #ff0000;
+}
+.mr10 {
+  margin-right: 10px;
+}
+.table-td-thumb {
+  display: block;
+  margin: auto;
+  width: 40px;
+  height: 40px;
+}
+</style>

@@ -1,9 +1,8 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
 const request = (params) => {
-  console.log(params);
-  const host = "/api/";
-  params.url = `${host}${params.url}`
+  const host = "http://localhost:3005/";
+  params.url = `${host}${params.url}`;
   params.headers = {};
   params.headers.authorization = localStorage.getItem("token");
   return axios(params)

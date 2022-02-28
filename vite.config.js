@@ -1,9 +1,9 @@
-import vue from '@vitejs/plugin-vue'
-
+import vue from "@vitejs/plugin-vue";
+import vueJsx from "@vitejs/plugin-vue-jsx";
 export default {
-    base: './',
-    plugins: [vue()],
-    optimizeDeps: {
-        include: ['schart.js']
-    }
-}
+  base: "./",
+  plugins: [vue(), vueJsx()],
+  optimizeDeps: {
+    include: ["schart.js"],
+  },
+};
