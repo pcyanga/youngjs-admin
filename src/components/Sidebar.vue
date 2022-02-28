@@ -55,14 +55,10 @@ import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 export default {
   setup() {
-    const menu = localStorage.getItem("menu");
+    let menu = localStorage.getItem("menu");
+    menu = JSON.parse(menu);
     console.log(menu);
-    const items = [
-      {
-        icon: "el-icon-lx-home",
-        index: "/dashboard",
-        title: "首页",
-      },
+    let items = [
       // {
       //   icon: "el-icon-lx-calendar",
       //   index: "3",
@@ -116,25 +112,6 @@ export default {
       //     },
       //   ],
       // },
-      {
-        icon: "el-icon-lx-calendar",
-        index: "6",
-        title: "系统设置",
-        subs: [
-          {
-            index: "/user",
-            title: "用户列表",
-          },
-          {
-            index: "/role",
-            title: "角色列表",
-          },
-          {
-            index: "/menu",
-            title: "菜单设置",
-          },
-        ],
-      },
       // {
       //   icon: "el-icon-lx-cascades",
       //   index: "/table",
@@ -145,7 +122,6 @@ export default {
       //   index: "/tabs",
       //   title: "tab选项卡",
       // },
-
       // {
       //   icon: "el-icon-lx-calendar",
       //   index: "3",
@@ -207,6 +183,25 @@ export default {
       //   title: "支持作者",
       // },
     ];
+    menu.forEach((m) => {
+      if (m.type == 1 || m.type == 2) {
+        const tmp = {
+          icon: "el-icon-lx-calendar",
+          index: m.type == 1 ? m.id : m.key,
+          title: m.name,
+          subs: [],
+        };
+        m.children.forEach((mc) => {
+          tmp.subs.push({
+            index: mc.key,
+            title: mc.name,
+          });
+        });
+        if (tmp.subs.length == 0) delete tmp.subs;
+        items.push(tmp);
+      }
+    });
+    console.log(items);
 
     const route = useRoute();
 

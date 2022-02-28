@@ -69,12 +69,16 @@ export default {
           ser
             .login(param)
             .then((res) => {
-              console.log(res);
               if (res.code == 1000) {
                 ElMessage.success("登录成功");
                 localStorage.setItem("ms_username", param.username);
                 localStorage.setItem("token", res.data.token);
-                router.push("/");
+                ser.info(res.data.token).then((res) => {
+                  if (res.code == 1000) {
+                    localStorage.setItem("menu", JSON.stringify(res.data.menu));
+                    router.push("/");
+                  }
+                });
               } else {
                 ElMessage.error(res.message);
               }
