@@ -120,6 +120,7 @@ export default {
         .then((res) => {
           if (res.code == 1000) {
             localStorage.setItem("ms_username", res.data.nickname);
+            localStorage.setItem("menu", JSON.stringify(res.data.menu));
           }
         })
         .catch((err) => {

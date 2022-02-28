@@ -55,6 +55,8 @@ import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 export default {
   setup() {
+    const menu = localStorage.getItem("menu");
+    console.log(menu);
     const items = [
       {
         icon: "el-icon-lx-home",
