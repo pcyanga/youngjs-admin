@@ -10,40 +10,64 @@
     <div class="container">
       <div class="handle-box">
         <el-button type="primary" @click="getAllMenu">刷新</el-button>
+        <el-button type="primary" @click="handleAdd({ id: 0 })"
+          >添加顶部菜单</el-button
+        >
       </div>
       <div class="custom-tree-container">
-        <div class="block">
-          <el-button type="primary" @click="handleAdd({ id: 0 })" size="mini"
-            >添加顶部菜单</el-button
-          >
-          <el-tree
-            :data="data"
-            node-key="id"
-            default-expand-all
-            :expand-on-click-node="false"
-          >
-            <template #default="{ node, data }">
-              <span class="custom-tree-node">
-                <span>{{ node.label }}</span>
-                <span>
-                  <el-button size="mini" type="text" @click="handleAdd(data)">
-                    添加
-                  </el-button>
-                  <el-button size="mini" type="text" @click="handleEdit(data)">
-                    编辑
-                  </el-button>
-                  <el-button
-                    size="mini"
-                    type="text"
-                    @click="handleDelete(data)"
-                  >
-                    删除
-                  </el-button>
-                </span>
-              </span>
+        <div class="block"></div>
+        <el-table
+          ref="table"
+          border
+          row-key="id"
+          :data="data"
+          :indent="30"
+          :span-method="objectSpanMethod"
+        >
+          <el-table-column prop="name" label="名称">
+            <template v-slot="{ row }">
+              <div class="cell-content">
+                <span>{{ row.name }}</span>
+              </div>
             </template>
-          </el-tree>
-        </div>
+          </el-table-column>
+          <el-table-column prop="key" label="地址" width="180" align="center" />
+          <el-table-column prop="type" label="类型" align="center">
+            <template #default="scope">
+              <el-tag>{{
+                scope.row.type == 1
+                  ? "目录"
+                  : scope.row.type == 2
+                  ? "菜单"
+                  : "权限"
+              }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="sort" label="排序" align="center" />
+          <el-table-column label="操作" width="180" align="center">
+            <template #default="scope">
+              <el-button
+                type="text"
+                icon="el-icon-edit"
+                @click="handleEdit(scope.row)"
+                >编辑
+              </el-button>
+              <el-button
+                type="text"
+                icon="el-icon-edit"
+                @click="handleAdd(scope.row)"
+                >添加
+              </el-button>
+              <el-button
+                type="text"
+                icon="el-icon-delete"
+                class="red"
+                @click="handleDelete(scope.row)"
+                >删除</el-button
+              >
+            </template>
+          </el-table-column>
+        </el-table>
       </div>
     </div>
 
@@ -203,6 +227,35 @@ export default {
       children: "children",
       label: "label",
     };
+    // function checkHasChildren(row) {
+    //   return this.formatTableData
+    //     .filter((item) => item.name === row.name)
+    //     .some((item) => item.children.length > 0);
+    // }
+    // function toggleRowExpansion(row) {
+    //   row.isExpand = !row.isExpand; // 此行代码有副作用，但目前只想到这样实现
+    //   const rowList = this.originTableData.filter(
+    //     (item) => item.name === row.name
+    //   );
+    //   const expansionRow = rowList[rowList.length - 1];
+    //   this.$refs.table &&
+    //     this.$refs.table.toggleRowExpansion(expansionRow, row.isExpand);
+    // }
+    // function objectSpanMethod({ rowIndex, columnIndex }) {
+    //   if (columnIndex === 0) {
+    //     if (rowIndex % 3 === 0) {
+    //       return {
+    //         rowspan: 3,
+    //         colspan: 1,
+    //       };
+    //     } else {
+    //       return {
+    //         rowspan: 0,
+    //         colspan: 0,
+    //       };
+    //     }
+    //   }
+    // }
     return {
       editVisible,
       form,
@@ -217,6 +270,9 @@ export default {
       check,
       tree,
       getAllMenu,
+      // checkHasChildren,
+      // toggleRowExpansion,
+      // objectSpanMethod,
     };
   },
 };
@@ -261,5 +317,8 @@ export default {
   justify-content: space-between;
   font-size: 14px;
   padding-right: 8px;
+}
+.cell-content {
+  display: inline-block;
 }
 </style>

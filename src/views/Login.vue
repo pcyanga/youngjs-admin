@@ -10,7 +10,7 @@
         class="ms-content"
       >
         <el-form-item prop="username">
-          <el-input v-model="param.username" placeholder="username">
+          <el-input v-model="param.username" placeholder="用户名">
             <template #prepend>
               <el-button icon="el-icon-user"></el-button>
             </template>
@@ -19,10 +19,17 @@
         <el-form-item prop="password">
           <el-input
             type="password"
-            placeholder="password"
+            placeholder="密码"
             v-model="param.password"
             @keyup.enter="submitForm()"
           >
+            <template #prepend>
+              <el-button icon="el-icon-lock"></el-button>
+            </template>
+          </el-input>
+        </el-form-item>
+        <el-form-item prop="code">
+          <el-input v-model="param.code" placeholder="谷歌密码">
             <template #prepend>
               <el-button icon="el-icon-lock"></el-button>
             </template>
@@ -47,10 +54,7 @@ export default {
   setup() {
     const ser = new Server();
     const router = useRouter();
-    const param = reactive({
-      username: "admin",
-      password: "123456",
-    });
+    const param = reactive({});
 
     const rules = {
       username: [
@@ -74,7 +78,12 @@ export default {
                 ElMessage.success("登录成功");
                 localStorage.setItem("ms_username", param.username);
                 localStorage.setItem("token", res.data.token);
-                router.push("/");
+                ser.info(res.data.token).then((res) => {
+                  if (res.code == 1000) {
+                    localStorage.setItem("menu", JSON.stringify(res.data.menu));
+                    router.push("/");
+                  }
+                });
               } else {
                 ElMessage.error(res.message);
               }
@@ -106,7 +115,7 @@ export default {
   position: relative;
   width: 100%;
   height: 100%;
-  background-image: url(../assets/img/login-bg.jpg);
+  /* background-image: url(../assets/img/login-bg.jpg); */
   background-size: 100%;
 }
 .ms-title {
