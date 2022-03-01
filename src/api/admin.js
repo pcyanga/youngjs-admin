@@ -49,4 +49,10 @@ export class Server {
       data: params,
     });
   }
+  makeGoogleUrl() {
+    return request({
+      url: `admin/user/makeGoogleUrl`,
+      method: "get",
+    });
+  }
 }
