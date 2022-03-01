@@ -73,7 +73,6 @@ export default {
           ser
             .login(param)
             .then((res) => {
-              console.log(res);
               if (res.code == 1000) {
                 ElMessage.success("登录成功");
                 localStorage.setItem("ms_username", param.username);
