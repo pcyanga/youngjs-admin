@@ -28,13 +28,43 @@
           </template>
           <el-form label-width="90px">
             <el-form-item label="昵称：">
-              <el-input type="text" v-model="form.nickname"></el-input
+              <el-input
+                type="text"
+                v-model="form.nickname"
+                placeholder="不设置放空"
+              ></el-input
             ></el-form-item>
             <el-form-item label="旧密码：">
-              <el-input type="password" v-model="form.old"></el-input>
+              <el-input
+                type="password"
+                v-model="form.old"
+                placeholder="不设置放空"
+              ></el-input>
             </el-form-item>
             <el-form-item label="新密码：">
-              <el-input type="password" v-model="form.password"></el-input>
+              <el-input
+                type="password"
+                v-model="form.password"
+                placeholder="不设置放空"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="谷歌二维码">
+              <img :src="img" />
+              <p>
+                {{ secret
+                }}<span
+                  v-if="isBinding == true"
+                  style="color: green; margin-left: 10px"
+                  >已绑定</span
+                >
+              </p>
+            </el-form-item>
+            <el-form-item label="谷歌验证码" v-if="isBinding == false">
+              <el-input
+                type="code"
+                v-model="form.code"
+                placeholder="不设置放空"
+              ></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit">保存</el-button>
@@ -87,17 +117,37 @@ export default {
   setup() {
     const ser = new Server();
     const name = localStorage.getItem("ms_username");
+    const secret = ref("");
+    const img = ref("");
+    const isBinding = ref(false);
     const form = reactive({
       old: "",
       password: "",
       nickname: localStorage.getItem("ms_username"),
+      code: "",
+      secret: "",
     });
+    const getSecret = () => {
+      ser.makeGoogleUrl().then((res) => {
+        if (res.code == 1000) {
+          secret.value = res.data.secret;
+          img.value = res.data.url;
+          isBinding.value = res.data.isBinding == 1 ? true : false;
+          form.secret = res.data.secret;
+          console.log(isBinding);
+        } else {
+          ElMessage.error(res.message);
+        }
+      });
+    };
+    getSecret();
     const onSubmit = () => {
       ser.update(form).then((res) => {
         console.log(res);
         if (res.code == 1000) {
           localStorage.setItem("ms_username", res.data.nickname);
           ElMessage.success(`修改成功`);
+          getSecret();
         } else {
           ElMessage.error(`修改失败:${res.message}`);
         }
@@ -150,6 +200,10 @@ export default {
       setImage,
       cropImage,
       saveAvatar,
+      secret,
+      img,
+      isBinding,
+      getSecret,
     };
   },
 };

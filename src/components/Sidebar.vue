@@ -57,7 +57,6 @@ export default {
   setup() {
     let menu = localStorage.getItem("menu");
     menu = JSON.parse(menu);
-    console.log(menu);
     let items = [
       // {
       //   icon: "el-icon-lx-calendar",
@@ -109,6 +108,25 @@ export default {
       //     {
       //       index: "/param",
       //       title: "参数设置",
+      //     },
+      //   ],
+      // },
+      // {
+      //   icon: "el-icon-lx-calendar",
+      //   index: "6",
+      //   title: "系统设置",
+      //   subs: [
+      //     {
+      //       index: "/user",
+      //       title: "用户列表",
+      //     },
+      //     {
+      //       index: "/role",
+      //       title: "角色列表",
+      //     },
+      //     {
+      //       index: "/menu",
+      //       title: "菜单设置",
       //     },
       //   ],
       // },
@@ -192,17 +210,18 @@ export default {
           subs: [],
         };
         m.children.forEach((mc) => {
-          tmp.subs.push({
-            index: mc.key,
-            title: mc.name,
-          });
+          if (mc.type == 2) {
+            tmp.subs.push({
+              index: mc.key,
+              title: mc.name,
+            });
+          }
         });
         if (tmp.subs.length == 0) delete tmp.subs;
+        console.log(tmp);
         items.push(tmp);
       }
     });
-    console.log(items);
-
     const route = useRoute();
 
     const onRoutes = computed(() => {

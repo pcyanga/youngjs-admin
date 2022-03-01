@@ -29,7 +29,7 @@
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="balance" label="余额"></el-table-column>
         <el-table-column prop="address" label="地址"></el-table-column>
-        <el-table-column prop="privateKey" label="密钥"></el-table-column>
+        <!-- <el-table-column prop="privateKey" label="密钥"></el-table-column> -->
         <el-table-column prop="updateTime" label="更新时间"></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
