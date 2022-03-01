@@ -41,6 +41,13 @@
         <el-table-column label="充值金额">
           <template #default="scope">{{ scope.row.amount }}</template>
         </el-table-column>
+        <el-table-column label="账户类型" align="center">
+          <template #default="scope">
+            <el-tag :type="scope.row.type == 1 ? '' : 'danger'">{{
+              scope.row.type == 1 ? "基础账户" : "佣金账户"
+            }}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column prop="rechargeTime" label="到账时间"></el-table-column>
         <el-table-column prop="reason" label="不通过原因"></el-table-column>
         <el-table-column label="状态" align="center">

@@ -29,6 +29,20 @@ export class Server {
       data: params,
     });
   }
+  delete(params) {
+    return request({
+      url: `admin/user/delete`,
+      method: "post",
+      data: params,
+    });
+  }
+  add(params) {
+    return request({
+      url: `admin/user/add`,
+      method: "post",
+      data: params,
+    });
+  }
   page(params) {
     return request({
       url: `admin/user/page`,

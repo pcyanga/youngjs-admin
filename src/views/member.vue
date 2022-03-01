@@ -220,6 +220,7 @@ export default {
       keywords: "",
       page: 1,
       size: 10,
+      order: { createTime: "desc" },
     });
     const tableData = ref([]);
     const pageTotal = ref(0);

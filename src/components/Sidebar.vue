@@ -57,7 +57,12 @@ export default {
   setup() {
     let menu = localStorage.getItem("menu");
     menu = JSON.parse(menu);
-    let items = [
+    const items = [
+      // {
+      //   icon: "el-icon-lx-home",
+      //   index: "/dashboard",
+      //   title: "首页",
+      // },
       // {
       //   icon: "el-icon-lx-calendar",
       //   index: "3",
