@@ -101,7 +101,7 @@
     </el-dialog>
     <!-- 编辑弹出框 -->
     <el-dialog title="添加" v-model="addVisible" width="30%">
-      <el-form label-width="70px">
+      <el-form label-width="70px" :model="form">
         <el-input v-model="form.pid" type="hidden"></el-input>
         <el-input v-model="form.id" type="hidden"></el-input>
         <el-form-item label="菜单名称">
@@ -113,11 +113,11 @@
         <el-form-item label="排序">
           <el-input v-model="form.sort" type="number"></el-input>
         </el-form-item>
-        <el-form-item label="类型">
+        <el-form-item label="类型" prop="type">
           <el-radio-group v-model="form.type">
-            <el-radio label="1">目录</el-radio>
-            <el-radio label="2">菜单</el-radio>
-            <el-radio label="3">权限</el-radio>
+            <el-radio :label="1">目录</el-radio>
+            <el-radio :label="2">菜单</el-radio>
+            <el-radio :label="3">权限</el-radio>
           </el-radio-group>
         </el-form-item>
       </el-form>
@@ -163,23 +163,20 @@ export default {
     let form = reactive({
       id: 0,
       pid: 0,
-      type: 0,
+      type: 1,
       label: "",
       name: "",
       sort: 0,
       key: "",
     });
     const handleEdit = (row) => {
-      console.log(row);
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
       form.label = form.name;
       editVisible.value = true;
     };
-    const tree = ref();
     const saveEdit = () => {
-      delete form.label;
       ser.update(form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
@@ -198,6 +195,7 @@ export default {
       form.name = "";
       form.key = "";
       form.sort = "";
+      form.type = 1;
       addVisible.value = true;
     };
     const saveAdd = () => {
@@ -212,7 +210,6 @@ export default {
       });
     };
     const data = ref([]);
-    const check = ref([]);
     const getAllMenu = () => {
       ser.getAllMenu().then((res) => {
         if (res.code == 1000) {
@@ -223,39 +220,6 @@ export default {
       });
     };
     getAllMenu();
-    const defaultProps = {
-      children: "children",
-      label: "label",
-    };
-    // function checkHasChildren(row) {
-    //   return this.formatTableData
-    //     .filter((item) => item.name === row.name)
-    //     .some((item) => item.children.length > 0);
-    // }
-    // function toggleRowExpansion(row) {
-    //   row.isExpand = !row.isExpand; // 此行代码有副作用，但目前只想到这样实现
-    //   const rowList = this.originTableData.filter(
-    //     (item) => item.name === row.name
-    //   );
-    //   const expansionRow = rowList[rowList.length - 1];
-    //   this.$refs.table &&
-    //     this.$refs.table.toggleRowExpansion(expansionRow, row.isExpand);
-    // }
-    // function objectSpanMethod({ rowIndex, columnIndex }) {
-    //   if (columnIndex === 0) {
-    //     if (rowIndex % 3 === 0) {
-    //       return {
-    //         rowspan: 3,
-    //         colspan: 1,
-    //       };
-    //     } else {
-    //       return {
-    //         rowspan: 0,
-    //         colspan: 0,
-    //       };
-    //     }
-    //   }
-    // }
     return {
       editVisible,
       form,
@@ -266,13 +230,7 @@ export default {
       handleAdd,
       saveAdd,
       data,
-      defaultProps,
-      check,
-      tree,
       getAllMenu,
-      // checkHasChildren,
-      // toggleRowExpansion,
-      // objectSpanMethod,
     };
   },
 };

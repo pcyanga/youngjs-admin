@@ -50,14 +50,14 @@
             <el-button
               type="text"
               icon="el-icon-edit"
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="handleEdit(scope.row)"
               >编辑
             </el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
               class="red"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row)"
               >删除</el-button
             >
           </template>
@@ -193,7 +193,7 @@ export default {
     };
 
     // 删除操作
-    const handleDelete = (index, rows) => {
+    const handleDelete = (rows) => {
       // 二次确认删除
       ElMessageBox.confirm("确定要删除吗？", "提示", {
         type: "warning",
@@ -231,7 +231,6 @@ export default {
       form.roleId = "";
       addVisible.value = true;
     };
-    let idx = -1;
     const rules = {
       username: [
         { required: true, message: "请输入用户名", trigger: "blur" },
@@ -239,8 +238,7 @@ export default {
       ],
       nickname: [{ required: true, message: "请输入昵称", trigger: "blur" }],
     };
-    const handleEdit = (index, row) => {
-      idx = index;
+    const handleEdit = (row) => {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
