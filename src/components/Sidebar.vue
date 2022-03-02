@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { computed, watch } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { useRoute } from "vue-router";
 export default {
@@ -223,7 +223,6 @@ export default {
           }
         });
         if (tmp.subs.length == 0) delete tmp.subs;
-        console.log(tmp);
         items.push(tmp);
       }
     });

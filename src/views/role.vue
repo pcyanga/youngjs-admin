@@ -41,14 +41,14 @@
             <el-button
               type="text"
               icon="el-icon-edit"
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="handleEdit(scope.row)"
               >编辑
             </el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
               class="red"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row)"
               >删除</el-button
             >
           </template>
@@ -67,12 +67,9 @@
     </div>
 
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="editVisible" width="30%">
-      <el-form label-width="70px">
-        <el-form-item label="ID">
-          <el-input v-model="form.id" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="角色名称">
+    <el-dialog title="编辑" v-model="editVisible" width="50%">
+      <el-form label-width="100px" :rules="rules" ref="formRef" :model="form">
+        <el-form-item label="角色名称" prop="rolename">
           <el-input v-model="form.rolename"></el-input>
         </el-form-item>
         <el-form-item label="菜单设置">
@@ -96,12 +93,9 @@
       </template>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="添加" v-model="addVisible" width="30%">
-      <el-form label-width="70px">
-        <el-form-item label="ID">
-          <el-input v-model="form.id" disabled></el-input>
-        </el-form-item>
-        <el-form-item label="角色名称">
+    <el-dialog title="添加" v-model="addVisible" width="50%">
+      <el-form label-width="100px" :rules="rules" ref="formRef" :model="form">
+        <el-form-item label="角色名称" prop="rolename">
           <el-input v-model="form.rolename"></el-input>
         </el-form-item>
         <el-form-item label="菜单设置">
@@ -135,6 +129,14 @@ import moment from "moment";
 export default {
   name: "basetable",
   setup() {
+    const formRef = ref(null);
+    const rules = {
+      rolename: [
+        { required: true, message: "请输入角色名", trigger: "blur" },
+        { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" },
+      ],
+      nickname: [{ required: true, message: "请输入昵称", trigger: "blur" }],
+    };
     const ser = new Server();
     const query = reactive({
       keywords: "",
@@ -167,7 +169,7 @@ export default {
     };
 
     // 删除操作
-    const handleDelete = (index, rows) => {
+    const handleDelete = (rows) => {
       // 二次确认删除
       ElMessageBox.confirm("确定要删除吗？", "提示", {
         type: "warning",
@@ -192,8 +194,7 @@ export default {
       rolename: "",
       menuIds: [],
     });
-    let idx = -1;
-    const handleEdit = (index, row) => {
+    const handleEdit = (row) => {
       getAllMenu();
       getRoleMenu(row.id);
       idx = index;
@@ -225,13 +226,17 @@ export default {
     };
     const saveAdd = () => {
       form.menuIds = tree.value.getCheckedKeys();
-      ser.add(form).then((res) => {
-        if (res.code == 1000) {
-          ElMessage.success(`添加成功`);
-          addVisible.value = false;
-          getData();
-        } else {
-          ElMessage.error(`添加失败:${res.message}`);
+      formRef.value.validate((valid) => {
+        if (valid) {
+          ser.add(form).then((res) => {
+            if (res.code == 1000) {
+              ElMessage.success(`添加成功`);
+              addVisible.value = false;
+              getData();
+            } else {
+              ElMessage.error(`添加失败:${res.message}`);
+            }
+          });
         }
       });
     };
@@ -277,6 +282,8 @@ export default {
       defaultProps,
       check,
       tree,
+      rules,
+      formRef,
     };
   },
 };
