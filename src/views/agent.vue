@@ -3,7 +3,7 @@
     <div class="crumbs">
       <el-breadcrumb separator="/">
         <el-breadcrumb-item>
-          <i class="el-icon-lx-cascades"></i> 角色列表
+          <i class="el-icon-lx-cascades"></i> 代理列表
         </el-breadcrumb-item>
       </el-breadcrumb>
     </div>
@@ -13,7 +13,7 @@
         <el-button type="primary" @click="handleAdd">添加</el-button>
         <el-input
           v-model="query.keywords"
-          placeholder="角色"
+          placeholder="名称/代号"
           class="handle-input mr10"
           clearable
         ></el-input>
@@ -34,7 +34,11 @@
           width="55"
           align="center"
         ></el-table-column>
-        <el-table-column prop="rolename" label="角色名称"></el-table-column>
+        <el-table-column prop="name" label="代理名称"></el-table-column>
+        <el-table-column prop="code" label="代号"></el-table-column>
+        <el-table-column prop="link" label="链接"></el-table-column>
+        <el-table-column prop="recharge" label="总充值"></el-table-column>
+        <el-table-column prop="withdraw" label="总提现"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template #default="scope">
@@ -65,50 +69,14 @@
         ></el-pagination>
       </div>
     </div>
-
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="editVisible" width="50%">
-      <el-form label-width="100px" :rules="rules" ref="formRef" :model="form">
-        <el-form-item label="角色名称" prop="rolename">
-          <el-input v-model="form.rolename"></el-input>
+    <el-dialog title="添加" v-model="addVisible" width="30%">
+      <el-form label-width="70px" :rules="rules" ref="add" :model="form">
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="form.name"></el-input>
         </el-form-item>
-        <el-form-item label="菜单设置">
-          <el-tree
-            :data="data"
-            ref="tree"
-            show-checkbox
-            node-key="id"
-            :default-expanded-keys="[]"
-            :default-checked-keys="check"
-            :props="defaultProps"
-          >
-          </el-tree>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="editVisible = false">取 消</el-button>
-          <el-button type="primary" @click="saveEdit">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <!-- 编辑弹出框 -->
-    <el-dialog title="添加" v-model="addVisible" width="50%">
-      <el-form label-width="100px" :rules="rules" ref="formRef" :model="form">
-        <el-form-item label="角色名称" prop="rolename">
-          <el-input v-model="form.rolename"></el-input>
-        </el-form-item>
-        <el-form-item label="菜单设置">
-          <el-tree
-            :data="data"
-            ref="tree"
-            show-checkbox
-            node-key="id"
-            :default-expanded-keys="[]"
-            :default-checked-keys="check"
-            :props="defaultProps"
-          >
-          </el-tree>
+        <el-form-item label="代号" prop="code">
+          <el-input v-model="form.code" placeholder="例：code"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -118,25 +86,40 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 编辑弹出框 -->
+    <el-dialog title="编辑" v-model="editVisible" width="30%">
+      <el-form label-width="70px" :rules="rules" ref="add" :model="form">
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="代号" prop="code">
+          <el-input
+            v-model="form.code"
+            placeholder="例：code"
+            disabled
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="editVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveEdit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/role";
+import { Server } from "../api/agent";
 import moment from "moment";
 export default {
   name: "basetable",
   setup() {
-    const formRef = ref(null);
-    const rules = {
-      rolename: [
-        { required: true, message: "请输入角色名", trigger: "blur" },
-        { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" },
-      ],
-      nickname: [{ required: true, message: "请输入昵称", trigger: "blur" }],
-    };
+    const roles = ref([]);
+    const add = ref(null);
     const ser = new Server();
     const query = reactive({
       keywords: "",
@@ -189,43 +172,36 @@ export default {
 
     // 表格编辑时弹窗和保存
     const editVisible = ref(false);
+    const addVisible = ref(false);
     let form = reactive({
       id: 0,
-      rolename: "",
-      menuIds: [],
+      name: "",
+      code: "",
     });
+    const handleAdd = () => {
+      form.id = 0;
+      form.name = "";
+      form.code = "";
+      addVisible.value = true;
+    };
+    const rules = {
+      name: [
+        { required: true, message: "请输入名称", trigger: "blur" },
+        { min: 1, max: 10, message: "长度在 1 到 10 个字符", trigger: "blur" },
+      ],
+      code: [
+        { required: true, message: "请输入代号", trigger: "blur" },
+        { min: 3, max: 10, message: "长度在 3 到 10 个字符", trigger: "blur" },
+      ],
+    };
     const handleEdit = (row) => {
-      getAllMenu();
-      getRoleMenu(row.id);
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
       editVisible.value = true;
     };
-    const tree = ref();
-    const saveEdit = () => {
-      editVisible.value = false;
-      form.menuIds = tree.value.getCheckedKeys();
-      ser.update(form).then((res) => {
-        if (res.code == 1000) {
-          ElMessage.success(`修改成功`);
-          getData();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
-        }
-      });
-    };
-    const addVisible = ref(false);
-    const handleAdd = () => {
-      getAllMenu();
-      check.value = [];
-      form.id = 0;
-      form.rolename = "";
-      addVisible.value = true;
-    };
     const saveAdd = () => {
-      form.menuIds = tree.value.getCheckedKeys();
-      formRef.value.validate((valid) => {
+      add.value.validate((valid) => {
         if (valid) {
           ser.add(form).then((res) => {
             if (res.code == 1000) {
@@ -239,29 +215,16 @@ export default {
         }
       });
     };
-    const data = ref([]);
-    const check = ref([]);
-    const getRoleMenu = (roleId) => {
-      ser.getRoleMenu({ roleId }).then((res) => {
+    const saveEdit = () => {
+      editVisible.value = false;
+      ser.update(form).then((res) => {
         if (res.code == 1000) {
-          check.value = res.data;
+          ElMessage.success(`修改成功`);
+          getData();
         } else {
-          ElMessage.error(`菜单获取失败:${res.message}`);
+          ElMessage.error(`修改失败:${res.message}`);
         }
       });
-    };
-    const getAllMenu = () => {
-      ser.getAllMenu().then((res) => {
-        if (res.code == 1000) {
-          data.value = res.data;
-        } else {
-          ElMessage.error(`菜单获取失败:${res.message}`);
-        }
-      });
-    };
-    const defaultProps = {
-      children: "children",
-      label: "label",
     };
     return {
       query,
@@ -277,12 +240,8 @@ export default {
       addVisible,
       handleAdd,
       saveAdd,
-      data,
-      defaultProps,
-      check,
-      tree,
+      add,
       rules,
-      formRef,
     };
   },
 };

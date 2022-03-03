@@ -230,6 +230,15 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: "table" */ "../views/menu.vue"),
       },
+      {
+        path: "/agent",
+        name: "agent",
+        meta: {
+          title: "代理列表",
+        },
+        component: () =>
+          import(/* webpackChunkName: "table" */ "../views/agent.vue"),
+      },
     ],
   },
   {
