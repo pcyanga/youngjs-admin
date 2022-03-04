@@ -38,7 +38,9 @@
         <el-table-column prop="code" label="代号"></el-table-column>
         <el-table-column prop="link" label="链接">
           <template #default="scope">
-            {{ scope.row.link }}
+            <a :href="scope.row.link">{{
+              scope.row.link.slice(0, 15) + "..." + scope.row.link.slice(-15)
+            }}</a>
             <i
               class="el-icon-document-copy"
               style="margin-left: 10px; cursor: pointer"
