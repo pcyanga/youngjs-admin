@@ -10,6 +10,14 @@
     <div class="container">
       <div class="handle-box">
         <el-button type="primary" @click="handleSearch">刷新</el-button>
+        <el-select v-model="query.agent" placeholder="代理筛选" clearable>
+          <el-option
+            v-for="a in agent"
+            :key="a.code"
+            :label="a.name"
+            :value="a.code"
+          ></el-option>
+        </el-select>
         <el-input
           v-model="query.keywords"
           placeholder="ID/邮箱"
@@ -221,7 +229,9 @@ export default {
       page: 1,
       size: 10,
       order: { createTime: "desc" },
+      agent: "",
     });
+    const agent = ref([]);
     const tableData = ref([]);
     const pageTotal = ref(0);
     // 获取表格数据
@@ -235,7 +245,12 @@ export default {
       });
     };
     getData();
-
+    const getAgent = () => {
+      ser.agentList(query).then((res) => {
+        agent.value = res.data;
+      });
+    };
+    getAgent();
     // 查询操作
     const handleSearch = () => {
       query.page = 1;
@@ -356,6 +371,7 @@ export default {
       query1,
       handleTeamChange,
       subData,
+      agent,
     };
   },
 };

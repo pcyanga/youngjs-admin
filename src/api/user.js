@@ -30,4 +30,10 @@ export class Server {
       params,
     });
   }
+  agentList() {
+    return request({
+      url: `admin/agent/list`,
+      method: "post",
+    });
+  }
 }

@@ -36,7 +36,18 @@
         ></el-table-column>
         <el-table-column prop="name" label="代理名称"></el-table-column>
         <el-table-column prop="code" label="代号"></el-table-column>
-        <el-table-column prop="link" label="链接"></el-table-column>
+        <el-table-column prop="link" label="链接">
+          <template #default="scope">
+            {{ scope.row.link }}
+            <i
+              class="el-icon-document-copy"
+              style="margin-left: 10px; cursor: pointer"
+              :data-clipboard-text="scope.row.link"
+              @click="copy"
+            ></i
+          ></template>
+        </el-table-column>
+        <el-table-column prop="userNumber" label="会员人数"></el-table-column>
         <el-table-column prop="recharge" label="总充值"></el-table-column>
         <el-table-column prop="withdraw" label="总提现"></el-table-column>
         <el-table-column prop="createTime" label="创建时间"></el-table-column>
@@ -115,6 +126,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Server } from "../api/agent";
 import moment from "moment";
+import Clipboard from "clipboard";
 export default {
   name: "basetable",
   setup() {
@@ -226,6 +238,19 @@ export default {
         }
       });
     };
+    const copy = () => {
+      var clipboard = new Clipboard(".el-icon-document-copy");
+      clipboard.on("success", (e) => {
+        ElMessage.success(`复制成功`);
+        //  释放内存
+        clipboard.destroy();
+      });
+      clipboard.on("error", (e) => {
+        ElMessage.error(`复制失败:${e.message}`);
+        // 释放内存
+        clipboard.destroy();
+      });
+    };
     return {
       query,
       tableData,
@@ -242,6 +267,7 @@ export default {
       saveAdd,
       add,
       rules,
+      copy,
     };
   },
 };
