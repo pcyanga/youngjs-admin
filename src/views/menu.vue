@@ -164,7 +164,6 @@ export default {
       id: 0,
       pid: 0,
       type: 1,
-      label: "",
       name: "",
       sort: 0,
       key: "",
@@ -173,7 +172,6 @@ export default {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
-      form.label = form.name;
       editVisible.value = true;
     };
     const saveEdit = () => {
