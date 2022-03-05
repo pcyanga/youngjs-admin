@@ -79,8 +79,9 @@ export default {
                 localStorage.setItem("token", res.data.token);
                 ser.info(res.data.token).then((res) => {
                   if (res.code == 1000) {
+                    const r = getFirstMenu(res.data.menu) || "/";
                     localStorage.setItem("menu", JSON.stringify(res.data.menu));
-                    router.push("/");
+                    router.push(r);
                   }
                 });
               } else {
@@ -95,10 +96,16 @@ export default {
         }
       });
     };
-
+    const getFirstMenu = (menu) => {
+      for (let m in menu) {
+        if (menu[m].type == 2) return menu[m].key;
+        for (let i in menu[m].children) {
+          if (menu[m].children[i].type == 2) return menu[m].children[i].key;
+        }
+      }
+    };
     const store = useStore();
     store.commit("clearTags");
-
     return {
       param,
       rules,
