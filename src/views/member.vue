@@ -29,7 +29,7 @@
       >
         <el-table-column
           prop="id"
-          label="ID"
+          label="ID/邀请码"
           width="55"
           align="center"
         ></el-table-column>
@@ -42,7 +42,8 @@
             scope.row.commissionBalance
           }}</template>
         </el-table-column>
-        <el-table-column prop="id" label="邀请码"></el-table-column>
+        <el-table-column prop="agent" label="代理代号"></el-table-column>
+        <el-table-column prop="createTime" label="注册时间"></el-table-column>
         <el-table-column prop="address" label="账户"></el-table-column>
         <el-table-column prop="levelId" label="等级"></el-table-column>
         <el-table-column prop="lev1" label="lev1"></el-table-column>
