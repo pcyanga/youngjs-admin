@@ -36,4 +36,11 @@ export class Server {
       method: "post",
     });
   }
+  addMoney(params) {
+    return request({
+      url: `admin/member/addMoney`,
+      method: "post",
+      data: params,
+    });
+  }
 }

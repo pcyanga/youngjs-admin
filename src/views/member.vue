@@ -42,10 +42,10 @@
           align="center"
         ></el-table-column>
         <el-table-column prop="email" label="邮箱"></el-table-column>
-        <el-table-column label="账户余额">
+        <el-table-column label="基础账户余额">
           <template #default="scope">{{ scope.row.balance }}</template>
         </el-table-column>
-        <el-table-column label="佣金余额">
+        <el-table-column label="佣金账户余额">
           <template #default="scope">{{
             scope.row.commissionBalance
           }}</template>
@@ -99,6 +99,12 @@
             <el-button
               type="text"
               icon="el-icon-edit"
+              @click="handleMoney(scope.row)"
+              >赠送
+            </el-button>
+            <el-button
+              type="text"
+              icon="el-icon-edit"
               @click="handleTeam(scope.row)"
               >查看下级
             </el-button>
@@ -126,7 +132,7 @@
 
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" v-model="editVisible" width="30%">
-      <el-form label-width="70px">
+      <el-form label-width="100px">
         <el-form-item label="ID">
           <el-input v-model="form.id" disabled></el-input>
         </el-form-item>
@@ -136,10 +142,10 @@
         <el-form-item label="密码">
           <el-input v-model="form.password"></el-input>
         </el-form-item>
-        <el-form-item label="余额">
+        <el-form-item label="基础账户余额">
           <el-input v-model="form.balance"></el-input>
         </el-form-item>
-        <el-form-item label="佣金余额">
+        <el-form-item label="佣金账户余额">
           <el-input v-model="form.commissionBalance"></el-input>
         </el-form-item>
         <!-- <el-form-item label="状态" prop="status">
@@ -160,6 +166,25 @@
         <span class="dialog-footer">
           <el-button @click="editVisible = false">取 消</el-button>
           <el-button type="primary" @click="saveEdit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <el-dialog title="活动赠送" v-model="moneyVisible" width="30%">
+      <el-form label-width="70px">
+        <el-form-item label="金额">
+          <el-input v-model="form1.amount" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="类型">
+          <el-radio-group v-model="form1.scene">
+            <el-radio :label="9">活动赠送(基础账户)</el-radio>
+            <el-radio :label="10">活动赠送(佣金账户)</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="moneyVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveMoney">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -354,6 +379,29 @@ export default {
         }
       });
     };
+    const moneyVisible = ref(false);
+    let form1 = reactive({
+      userId: 0,
+      amount: 0,
+      scene: 9,
+    });
+    const handleMoney = (data) => {
+      form1.userId = data.id;
+      form1.amount = 0;
+      form1.scene = 9;
+      moneyVisible.value = true;
+    };
+    const saveMoney = () => {
+      ser.addMoney(form1).then((res) => {
+        if (res.code == 1000) {
+          ElMessage.success(`操作成功`);
+          moneyVisible.value = false;
+          getData();
+        } else {
+          ElMessage.error(`操作失败:${res.message}`);
+        }
+      });
+    };
     return {
       query,
       tableData,
@@ -373,6 +421,10 @@ export default {
       handleTeamChange,
       subData,
       agent,
+      moneyVisible,
+      form1,
+      handleMoney,
+      saveMoney,
     };
   },
 };
