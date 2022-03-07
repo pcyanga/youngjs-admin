@@ -211,6 +211,10 @@ export default {
           return "提现";
         case 8:
           return "转到基础账户";
+        case 9:
+          return "活动赠送(基础账户)";
+        case 10:
+          return "活动赠送(佣金账户)";
       }
       return status;
     };
