@@ -99,6 +99,7 @@
             <el-button
               type="text"
               icon="el-icon-edit"
+              v-if="addMoneyBtn"
               @click="handleMoney(scope.row)"
               >赠送
             </el-button>
@@ -402,6 +403,16 @@ export default {
         }
       });
     };
+    const addMoneyBtn = ref(false);
+    let menu = localStorage.getItem("menu");
+    menu = JSON.parse(menu);
+    menu.forEach((m) => {
+      console.log(m.key);
+      if (m.key == "/member/addMoney") addMoneyBtn.value = true;
+      m.children.forEach((c) => {
+        if (c.key == "/member/addMoney") addMoneyBtn.value = true;
+      });
+    });
     return {
       query,
       tableData,
@@ -425,6 +436,7 @@ export default {
       form1,
       handleMoney,
       saveMoney,
+      addMoneyBtn,
     };
   },
 };
