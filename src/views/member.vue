@@ -98,15 +98,17 @@
             </el-button>
             <el-button
               type="text"
-              icon="el-icon-edit"
               v-if="addMoneyBtn"
-              @click="handleMoney(scope.row)"
-              >赠送
+              @click="handleMoney(scope.row, 9)"
+              >赠送（基础）
             </el-button>
             <el-button
               type="text"
-              icon="el-icon-edit"
-              @click="handleTeam(scope.row)"
+              v-if="addMoneyBtn1"
+              @click="handleMoney(scope.row, 10)"
+              >赠送（佣金）
+            </el-button>
+            <el-button type="text" @click="handleTeam(scope.row)"
               >查看下级
             </el-button>
             <el-button
@@ -175,12 +177,12 @@
         <el-form-item label="金额">
           <el-input v-model="form1.amount" type="number"></el-input>
         </el-form-item>
-        <el-form-item label="类型">
+        <!-- <el-form-item label="类型">
           <el-radio-group v-model="form1.scene">
             <el-radio :label="9">活动赠送(基础账户)</el-radio>
             <el-radio :label="10">活动赠送(佣金账户)</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <template #footer>
         <span class="dialog-footer">
@@ -386,10 +388,10 @@ export default {
       amount: 0,
       scene: 9,
     });
-    const handleMoney = (data) => {
+    const handleMoney = (data, scene) => {
       form1.userId = data.id;
       form1.amount = 0;
-      form1.scene = 9;
+      form1.scene = scene || 9;
       moneyVisible.value = true;
     };
     const saveMoney = () => {
@@ -404,6 +406,7 @@ export default {
       });
     };
     const addMoneyBtn = ref(false);
+    const addMoneyBtn1 = ref(false);
     let menu = localStorage.getItem("menu");
     menu = JSON.parse(menu);
     menu.forEach((m) => {
@@ -411,6 +414,9 @@ export default {
       if (m.key == "/member/addMoney") addMoneyBtn.value = true;
       m.children.forEach((c) => {
         if (c.key == "/member/addMoney") addMoneyBtn.value = true;
+      });
+      m.children.forEach((c) => {
+        if (c.key == "/member/addMoney1") addMoneyBtn1.value = true;
       });
     });
     return {
@@ -437,6 +443,7 @@ export default {
       handleMoney,
       saveMoney,
       addMoneyBtn,
+      addMoneyBtn1,
     };
   },
 };
