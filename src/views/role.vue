@@ -126,6 +126,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Server } from "../api/role";
 import moment from "moment";
+import * as _ from "lodash";
 export default {
   name: "basetable",
   setup() {
@@ -205,11 +206,12 @@ export default {
     const tree = ref();
     const saveEdit = () => {
       editVisible.value = false;
-      form.menuIds = tree.value.getCheckedKeys();
+      form.menuIds = tree.value
+        .getCheckedKeys()
+        .concat(tree.value.getHalfCheckedKeys());
       ser.update(form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
-          getData();
         } else {
           ElMessage.error(`修改失败:${res.message}`);
         }
@@ -241,10 +243,15 @@ export default {
     };
     const data = ref([]);
     const check = ref([]);
+    let leaf = [];
     const getRoleMenu = (roleId) => {
       ser.getRoleMenu({ roleId }).then((res) => {
+        let dlist = [];
         if (res.code == 1000) {
-          check.value = res.data;
+          res.data.forEach((r) => {
+            if (leaf.indexOf(Number(r)) < 0) dlist.push(r);
+          });
+          check.value = dlist;
         } else {
           ElMessage.error(`菜单获取失败:${res.message}`);
         }
@@ -253,12 +260,17 @@ export default {
     const getAllMenu = () => {
       ser.getAllMenu().then((res) => {
         if (res.code == 1000) {
+          res.data.forEach((r) => {
+            if (r.children.length > 0) leaf.push(Number(r.id));
+          });
+          leaf = _.uniq(leaf);
           data.value = res.data;
         } else {
           ElMessage.error(`菜单获取失败:${res.message}`);
         }
       });
     };
+    getAllMenu();
     const defaultProps = {
       children: "children",
       label: "label",
