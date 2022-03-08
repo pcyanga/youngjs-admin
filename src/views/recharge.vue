@@ -157,7 +157,9 @@ export default {
       ser.page(query).then((res) => {
         console.log(res);
         res.data.list.forEach((l) => {
-          l.rechargeTime = moment(l.rechargeTime).format("MM-DD HH:mm:ss");
+          l.rechargeTime = moment(l.rechargeTime)
+            .add(8, "hour")
+            .format("MM-DD HH:mm:ss");
           switch (Number(l.status)) {
             case 0:
               console.log(222);
