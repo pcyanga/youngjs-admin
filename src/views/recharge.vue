@@ -16,6 +16,14 @@
           class="handle-input mr10 ml10"
           clearable
         ></el-input>
+        <el-date-picker
+          v-model="query.time"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        >
+        </el-date-picker>
         <el-button type="primary" icon="el-icon-search" @click="handleSearch"
           >搜索</el-button
         >
@@ -139,6 +147,7 @@ import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { Server } from "../api/recharge";
 import moment from "moment";
+import dayjs from "dayjs";
 export default {
   name: "basetable",
   setup() {
@@ -149,6 +158,10 @@ export default {
       size: 10,
       order: { createTime: "desc" },
       userId: "",
+      time: [
+        moment().format("YYYY-MM-DD 00:00:00"),
+        moment().add(1, "day").format("YYYY-MM-DD 00:00:00"),
+      ],
     });
     const tableData = ref([]);
     const pageTotal = ref(0);
@@ -275,6 +288,49 @@ export default {
           return "已入账";
       }
     };
+    const shortcuts = reactive([
+      {
+        text: "今天",
+        value: () => {
+          const end = dayjs();
+          const start = dayjs().add(1, "days");
+          return [start, end];
+        },
+      },
+      {
+        text: "昨天",
+        value: () => {
+          return [
+            dayjs().add(-1, "days").format("YYYY-MM-DD 00:00:00"),
+            dayjs().add(-1, "days").format("YYYY-MM-DD 23:59:59"),
+          ];
+        },
+      },
+      {
+        text: "本月",
+        value: () => {
+          return [
+            dayjs().format("YYYY-MM-01 00:00:00"),
+            dayjs().format("YYYY-MM-DD 23:59:59"),
+          ];
+        },
+      },
+      {
+        text: "上月",
+        value: () => {
+          return [
+            dayjs().add(-1, "month").format("YYYY-MM-01 00:00:00"),
+            dayjs().format("YYYY-MM-01 00:00:00"),
+          ];
+        },
+      },
+    ]);
+    const end = new Date();
+    const start = new Date();
+    start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+    console.log(start, end);
+    const a = dayjs().format("YYYY-MM-01 00:00:00");
+    console.log(new Date(a));
     return {
       query,
       tableData,
@@ -291,6 +347,7 @@ export default {
       saveAdd,
       dealStatus,
       changeTableSort,
+      shortcuts,
     };
   },
 };

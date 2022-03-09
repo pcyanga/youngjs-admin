@@ -2,7 +2,7 @@
   <div>
     <el-row :gutter="20">
       <el-col :span="8">
-        <el-card shadow="hover" class="mgb20" style="height: 252px">
+        <el-card shadow="hover" class="mgb20" style="height: 350px">
           <div class="user-info">
             <img src="../assets/img/img.jpg" class="user-avator" alt />
             <div class="user-info-cont">
@@ -47,7 +47,40 @@
               </div>
             </el-card>
           </el-col>
-          <el-col :span="8" style="margin-top: 30px">
+          <el-col :span="8" style="margin-top: 10px">
+            <el-card shadow="hover" :body-style="{ padding: '0px' }">
+              <div class="grid-content grid-con-1">
+                <i class="el-icon-user-solid grid-con-icon"></i>
+                <div class="grid-cont-right">
+                  <div class="grid-num">{{ data.userYesterday }}</div>
+                  <div>昨日新增用户数</div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="8" style="margin-top: 10px">
+            <el-card shadow="hover" :body-style="{ padding: '0px' }">
+              <div class="grid-content grid-con-2">
+                <i class="el-icon-message-solid grid-con-icon"></i>
+                <div class="grid-cont-right">
+                  <div class="grid-num">{{ data.rechargeYesterday }}</div>
+                  <div>昨日充值金额</div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="8" style="margin-top: 10px">
+            <el-card shadow="hover" :body-style="{ padding: '0px' }">
+              <div class="grid-content grid-con-3">
+                <i class="el-icon-s-goods grid-con-icon"></i>
+                <div class="grid-cont-right">
+                  <div class="grid-num">{{ data.withdrawYesterday }}</div>
+                  <div>昨日提现金额</div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="8" style="margin-top: 10px">
             <el-card shadow="hover" :body-style="{ padding: '0px' }">
               <div class="grid-content grid-con-1">
                 <i class="el-icon-user-solid grid-con-icon"></i>
@@ -58,7 +91,7 @@
               </div>
             </el-card>
           </el-col>
-          <el-col :span="8" style="margin-top: 30px">
+          <el-col :span="8" style="margin-top: 10px">
             <el-card shadow="hover" :body-style="{ padding: '0px' }">
               <div class="grid-content grid-con-2">
                 <i class="el-icon-message-solid grid-con-icon"></i>
@@ -69,7 +102,7 @@
               </div>
             </el-card>
           </el-col>
-          <el-col :span="8" style="margin-top: 30px">
+          <el-col :span="8" style="margin-top: 10px">
             <el-card shadow="hover" :body-style="{ padding: '0px' }">
               <div class="grid-content grid-con-3">
                 <i class="el-icon-s-goods grid-con-icon"></i>
