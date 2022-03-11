@@ -38,7 +38,10 @@
             <el-card shadow="hover" :body-style="{ padding: '0px' }">
               <div class="grid-content grid-con-2">
                 <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.rechargeNumberToday }}</div>
+                  <div class="grid-num">
+                    {{ data.rechargeNumberToday }}
+                  </div>
+                  新户充值人数：{{ data.rechargeNumberTodayNew }}
                   <div>今日充值人数</div>
                 </div>
               </div>
@@ -78,7 +81,10 @@
             <el-card shadow="hover" :body-style="{ padding: '0px' }">
               <div class="grid-content grid-con-2">
                 <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.rechargeNumberYesterday }}</div>
+                  <div class="grid-num">
+                    {{ data.rechargeNumberYesterday }}
+                  </div>
+                  新户充值人数：{{ data.rechargeNumberYesterdayNew }}
                   <div>昨日充值人数</div>
                 </div>
               </div>
