@@ -41,7 +41,7 @@
                   <div class="grid-num">
                     {{ data.rechargeNumberToday }}
                   </div>
-                  新户充值人数：{{ data.rechargeNumberTodayNew }}
+                  新增充值人数：{{ data.rechargeNumberTodayNew }}
                   <div>今日充值人数</div>
                 </div>
               </div>
@@ -84,7 +84,7 @@
                   <div class="grid-num">
                     {{ data.rechargeNumberYesterday }}
                   </div>
-                  新户充值人数：{{ data.rechargeNumberYesterdayNew }}
+                  新增充值人数：{{ data.rechargeNumberYesterdayNew }}
                   <div>昨日充值人数</div>
                 </div>
               </div>
