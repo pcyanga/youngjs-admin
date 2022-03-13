@@ -111,6 +111,9 @@
             <el-button type="text" @click="handleTeam(scope.row)"
               >查看下级
             </el-button>
+            <el-button type="text" @click="handleRefresh(scope.row)"
+              >刷新充值
+            </el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
@@ -419,6 +422,15 @@ export default {
         if (c.key == "/member/addMoney1") addMoneyBtn1.value = true;
       });
     });
+    const handleRefresh = (data) => {
+      ser.refresh({ userId: data.id }).then((res) => {
+        if (res.code == 1000) {
+          ElMessage.success(`正在刷新，请稍后查看`);
+        } else {
+          ElMessage.error(`操作失败:${res.message}`);
+        }
+      });
+    };
     return {
       query,
       tableData,
@@ -444,6 +456,7 @@ export default {
       saveMoney,
       addMoneyBtn,
       addMoneyBtn1,
+      handleRefresh,
     };
   },
 };
