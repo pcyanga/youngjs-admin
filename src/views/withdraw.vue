@@ -64,6 +64,7 @@
             <el-button
               type="text"
               icon="el-icon-edit"
+              v-if="scope.row.status == '审核中'"
               @click="handlePass(scope.$index, scope.row)"
               >打款
             </el-button>
