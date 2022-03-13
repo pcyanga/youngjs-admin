@@ -323,6 +323,7 @@ export default {
       commissionBalance: 0,
       status: 1,
       code: "",
+      withdrawStatus: true,
     });
     let idx = -1;
     const handleEdit = (index, row) => {
@@ -338,7 +339,7 @@ export default {
     };
     const saveEdit = () => {
       editVisible.value = false;
-      form.withdrawStatus == true ? 1 : 0;
+      form.withdrawStatus = form.withdrawStatus == true ? 1 : 0;
       // form.status == true ? 1 : 0;
       ser.update(form).then((res) => {
         console.log(res);
