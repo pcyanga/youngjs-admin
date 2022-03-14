@@ -143,7 +143,13 @@
           <el-input v-model="form.email"></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input v-model="form.password"></el-input>
+          <el-input v-model="form.password" placeholder="不填则不改"></el-input>
+        </el-form-item>
+        <el-form-item label="安全密码">
+          <el-input
+            v-model="form.safePassword"
+            placeholder="不填则不改"
+          ></el-input>
         </el-form-item>
         <el-form-item label="基础账户余额">
           <el-input v-model="form.balance"></el-input>
@@ -233,7 +239,7 @@
           :current-page="query1.page"
           :page-size="query1.size"
           :total="pageTotal1"
-          @current-change="handlePageChange"
+          @current-change="handlePageChange1"
         ></el-pagination>
       </div>
       <div>
@@ -316,6 +322,7 @@ export default {
       id: 0,
       email: "",
       password: "",
+      safePassword: "",
       balance: 0,
       commissionBalance: 0,
       status: 1,
@@ -331,6 +338,7 @@ export default {
       form.status = Number(form.status);
       form.withdrawStatus = form.withdrawStatus ? true : false;
       form.password = "";
+      form.safePassword = "";
       editVisible.value = true;
     };
     const saveEdit = () => {
@@ -419,6 +427,11 @@ export default {
         if (c.key == "/member/addMoney1") addMoneyBtn1.value = true;
       });
     });
+    // 分页导航
+    const handlePageChange1 = (val) => {
+      query1.page = val;
+      handleTeamChange();
+    };
     return {
       query,
       tableData,
@@ -444,6 +457,7 @@ export default {
       saveMoney,
       addMoneyBtn,
       addMoneyBtn1,
+      handlePageChange1,
     };
   },
 };

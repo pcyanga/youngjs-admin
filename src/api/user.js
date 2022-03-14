@@ -26,8 +26,8 @@ export class Server {
   team(params) {
     return request({
       url: `admin/member/team`,
-      method: "get",
-      params,
+      method: "post",
+      data: params,
     });
   }
   agentList() {
