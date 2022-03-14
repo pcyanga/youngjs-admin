@@ -93,7 +93,7 @@
             <el-button
               type="text"
               icon="el-icon-edit"
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="handleEdit(scope.row)"
               >编辑
             </el-button>
             <el-button
@@ -332,9 +332,7 @@ export default {
       code: "",
       withdrawStatus: true,
     });
-    let idx = -1;
-    const handleEdit = (index, row) => {
-      idx = index;
+    const handleEdit = (row) => {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
@@ -435,6 +433,7 @@ export default {
     const handlePageChange1 = (val) => {
       query1.page = val;
       handleTeamChange();
+    };
     const handleRefresh = (data) => {
       ser.refresh({ userId: data.id }).then((res) => {
         if (res.code == 1000) {
