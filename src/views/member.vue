@@ -111,6 +111,9 @@
             <el-button type="text" @click="handleTeam(scope.row)"
               >查看下级
             </el-button>
+            <el-button type="text" @click="handleRefresh(scope.row)"
+              >刷新充值
+            </el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
@@ -327,6 +330,7 @@ export default {
       commissionBalance: 0,
       status: 1,
       code: "",
+      withdrawStatus: true,
     });
     let idx = -1;
     const handleEdit = (index, row) => {
@@ -343,7 +347,7 @@ export default {
     };
     const saveEdit = () => {
       editVisible.value = false;
-      form.withdrawStatus == true ? 1 : 0;
+      form.withdrawStatus = form.withdrawStatus == true ? 1 : 0;
       // form.status == true ? 1 : 0;
       ser.update(form).then((res) => {
         console.log(res);
@@ -431,6 +435,14 @@ export default {
     const handlePageChange1 = (val) => {
       query1.page = val;
       handleTeamChange();
+    const handleRefresh = (data) => {
+      ser.refresh({ userId: data.id }).then((res) => {
+        if (res.code == 1000) {
+          ElMessage.success(`正在刷新，请稍后查看`);
+        } else {
+          ElMessage.error(`操作失败:${res.message}`);
+        }
+      });
     };
     return {
       query,
@@ -458,6 +470,7 @@ export default {
       addMoneyBtn,
       addMoneyBtn1,
       handlePageChange1,
+      handleRefresh,
     };
   },
 };

@@ -43,4 +43,11 @@ export class Server {
       data: params,
     });
   }
+  refresh(params) {
+    return request({
+      url: `admin/member/refresh`,
+      method: "get",
+      params
+    });
+  }
 }
