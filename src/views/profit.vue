@@ -166,7 +166,7 @@ export default {
     const getData = () => {
       ser.page(query).then((res) => {
         res.data.list.forEach((l) => {
-          l.rechargeTime = moment(l.rechargeTime).format("MM-DD HH:mm:ss");
+          l.createTime = moment(l.createTime).format("MM-DD HH:mm:ss");
           // switch (Number(l.status)) {
           //   case 0:
           //     l.status = "未匹配";
