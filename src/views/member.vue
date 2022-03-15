@@ -20,7 +20,7 @@
         </el-select>
         <el-input
           v-model="query.keywords"
-          placeholder="ID/邮箱"
+          placeholder="ID/邮箱/IP/充值地址"
           class="handle-input mr10"
           clearable
         ></el-input>
