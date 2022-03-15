@@ -51,8 +51,7 @@
           }}</template>
         </el-table-column>
         <el-table-column prop="agent" label="代理代号"></el-table-column>
-        <el-table-column prop="createTime" label="注册时间"></el-table-column>
-        <el-table-column prop="address" label="账户"></el-table-column>
+        <!-- <el-table-column prop="address" label="账户"></el-table-column> -->
         <el-table-column prop="levelId" label="等级"></el-table-column>
         <el-table-column prop="lev1" label="lev1"></el-table-column>
         <!-- <el-table-column prop="lev2" label="lev2"></el-table-column>
@@ -61,11 +60,14 @@
         <el-table-column prop="ipAddr" label="ip地址"></el-table-column>
         <el-table-column prop="recharge" label="总充值"></el-table-column>
         <el-table-column prop="withdraw" label="总提现"></el-table-column>
-
         <el-table-column
+          prop="addressBase58"
+          label="充值地址"
+        ></el-table-column>
+        <!-- <el-table-column
           prop="googleSecret"
           label="谷歌验证码"
-        ></el-table-column>
+        ></el-table-column> -->
         <el-table-column prop="createTime" label="注册时间"></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
