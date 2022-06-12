@@ -116,14 +116,14 @@ export default {
   },
   setup() {
     const ser = new Server();
-    const name = localStorage.getItem("ms_username");
+    const name = localStorage.getItem("username");
     const secret = ref("");
     const img = ref("");
     const isBinding = ref(false);
     const form = reactive({
       old: "",
       password: "",
-      nickname: localStorage.getItem("ms_username"),
+      nickname: localStorage.getItem("username"),
       code: "",
       secret: "",
     });
@@ -145,7 +145,7 @@ export default {
       ser.update(form).then((res) => {
         console.log(res);
         if (res.code == 1000) {
-          localStorage.setItem("ms_username", res.data.nickname);
+          localStorage.setItem("username", res.data.nickname);
           ElMessage.success(`修改成功`);
           getSecret();
         } else {

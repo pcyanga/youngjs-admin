@@ -9,25 +9,29 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" @click="handleSearch">刷新</el-button>
-        <el-button type="primary" @click="handleAdd">添加</el-button>
+        <el-button type="primary" @click="handleSearch" size="mini"
+          >刷新</el-button
+        >
+        <el-button type="primary" @click="handleAdd" size="mini"
+          >添加</el-button
+        >
         <el-input
           v-model="query.keywords"
           placeholder="昵称/用户名"
           class="handle-input mr10"
           clearable
+          @keyup.enter="handleSearch"
+          size="mini"
         ></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="handleSearch"
+          size="mini"
           >搜索</el-button
         >
       </div>
-      <el-table
-        :data="tableData"
-        border
-        class="table"
-        ref="multipleTable"
-        header-cell-class-name="table-header"
-      >
+      <el-table :data="tableData" border ref="multipleTable" size="mini">
         <el-table-column
           prop="id"
           label="ID"
@@ -51,6 +55,7 @@
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.row)"
+              size="mini"
               >编辑
             </el-button>
             <el-button
@@ -58,6 +63,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.row)"
+              size="mini"
               >删除</el-button
             >
           </template>
@@ -75,7 +81,7 @@
       </div>
     </div>
     <!-- 编辑弹出框 -->
-    <el-dialog title="编辑" v-model="addVisible" width="30%">
+    <el-dialog title="添加" v-model="addVisible" width="30%">
       <el-form label-width="70px" :rules="rules" ref="add" :model="form">
         <el-form-item label="昵称" prop="nickname">
           <el-input v-model="form.nickname"></el-input>
@@ -91,7 +97,7 @@
           <el-input v-model="form.username"></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="region">
-          <el-select v-model="form.roleId" placeholder="请选择">
+          <el-select v-model="form.roleIds" placeholder="请选择" multiple>
             <el-option
               v-for="r in roles"
               :key="r.id"
@@ -128,7 +134,7 @@
           ></el-input>
         </el-form-item>
         <el-form-item label="角色" prop="region">
-          <el-select v-model="form.roleId" placeholder="请选择">
+          <el-select v-model="form.roleIds" placeholder="请选择" multiple>
             <el-option
               v-for="r in roles"
               :key="r.id"
@@ -220,7 +226,7 @@ export default {
       username: "",
       password: "",
       status: 1,
-      roleId: 0,
+      roleIds: [],
     });
     const handleAdd = () => {
       form.id = 0;
@@ -228,7 +234,7 @@ export default {
       form.username = "";
       form.password = "";
       form.status = 1;
-      form.roleId = "";
+      form.roleIds = [];
       addVisible.value = true;
     };
     const rules = {
@@ -239,16 +245,17 @@ export default {
       nickname: [{ required: true, message: "请输入昵称", trigger: "blur" }],
     };
     const handleEdit = (row) => {
-      Object.keys(form).forEach((item) => {
-        form[item] = row[item];
+      ser.info({ id: row.id }).then((res) => {
+        Object.keys(form).forEach((item) => {
+          form[item] = res.data[item];
+        });
       });
       form.password = "";
       form.status = form.status ? true : false;
-      form.roleId = Number(form.roleId) || "";
+      form.roleIds = form.roleId || [];
       editVisible.value = true;
     };
     const saveAdd = () => {
-      form.status = form.status == true ? 1 : 0;
       add.value.validate((valid) => {
         console.log(valid);
         if (valid) {
@@ -266,7 +273,6 @@ export default {
     };
     const saveEdit = () => {
       editVisible.value = false;
-      form.status = form.status == true ? 1 : 0;
       ser.update(form).then((res) => {
         console.log(res);
         if (res.code == 1000) {
@@ -279,38 +285,6 @@ export default {
       // Object.keys(form).forEach((item) => {
       //   tableData.value[idx][item] = form[item];
       // });
-    };
-    const teamVisible = ref(false);
-    const tableData1 = ref([]);
-    const pageTotal1 = ref(0);
-    const query1 = reactive({
-      lev: 1,
-      page: 1,
-      size: 10,
-      userId: 0,
-    });
-    const handleTeam = (data) => {
-      query1.userId = data.id;
-      handleTeamChange();
-    };
-    let subData = {
-      recharge: 0,
-      withdraw: 0,
-    };
-    const handleTeamChange = () => {
-      ser.team(query1).then((res) => {
-        if (res.code == 1000) {
-          subData.recharge = res.data.subData.recharge;
-          subData.withdraw = res.data.subData.withdraw;
-          tableData1.value = res.data.list;
-          pageTotal1.value = res.data.pagination.total;
-          query1.size = res.data.pagination.size;
-          query1.page = res.data.pagination.page;
-          teamVisible.value = true;
-        } else {
-          ElMessage.error(`获取失败:${res.message}`);
-        }
-      });
     };
     const getRoles = () => {
       ser.getRoles().then((res) => {
@@ -334,13 +308,6 @@ export default {
       handleDelete,
       handleEdit,
       saveEdit,
-      teamVisible,
-      handleTeam,
-      tableData1,
-      pageTotal1,
-      query1,
-      handleTeamChange,
-      subData,
       roles,
       addVisible,
       handleAdd,
@@ -370,7 +337,7 @@ export default {
 }
 .table {
   width: 100%;
-  font-size: 14px;
+  font-size: 10px;
 }
 .red {
   color: #ff0000;

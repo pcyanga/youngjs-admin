@@ -116,10 +116,10 @@ export default {
       //获取用户信息
       const ser = new Server();
       ser
-        .info(token)
+        .userInfo(token)
         .then((res) => {
           if (res.code == 1000) {
-            localStorage.setItem("ms_username", res.data.nickname);
+            localStorage.setItem("username", res.data.nickname);
             localStorage.setItem("menu", JSON.stringify(res.data.menu));
           }
         })

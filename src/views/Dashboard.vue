@@ -1,8 +1,8 @@
 <template>
   <div>
     <el-row :gutter="20">
-      <el-col :span="7">
-        <el-card shadow="hover" class="mgb20" style="height: 350px">
+      <el-col :span="8">
+        <el-card shadow="hover" class="mgb20" style="height: 252px">
           <div class="user-info">
             <img src="../assets/img/img.jpg" class="user-avator" alt />
             <div class="user-info-cont">
@@ -10,132 +10,47 @@
               <div>{{ role }}</div>
             </div>
           </div>
+          <div class="user-info-list">
+            上次登录时间：
+            <span>2019-11-01</span>
+          </div>
+          <div class="user-info-list">
+            上次登录地点：
+            <span>东莞</span>
+          </div>
         </el-card>
       </el-col>
       <el-col :span="16">
         <el-row :gutter="20" class="mgb20">
-          <el-col :span="6" style="margin-top: 10px">
+          <el-col :span="8">
             <el-card shadow="hover" :body-style="{ padding: '0px' }">
               <div class="grid-content grid-con-1">
+                <i class="el-icon-user-solid grid-con-icon"></i>
                 <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.userToday }}</div>
-                  <div>今日新增用户数</div>
+                  <div class="grid-num">1234</div>
+                  <div>用户访问量</div>
                 </div>
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6" style="margin-top: 10px">
+          <el-col :span="8">
             <el-card shadow="hover" :body-style="{ padding: '0px' }">
               <div class="grid-content grid-con-2">
+                <i class="el-icon-message-solid grid-con-icon"></i>
                 <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.rechargeToday }}</div>
-                  <div>今日充值金额</div>
+                  <div class="grid-num">321</div>
+                  <div>系统消息</div>
                 </div>
               </div>
             </el-card>
           </el-col>
-          <el-col :span="6" style="margin-top: 10px">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-2">
-                <div class="grid-cont-right">
-                  <div class="grid-num">
-                    {{ data.rechargeNumberToday }}
-                  </div>
-                  新增充值人数：{{ data.rechargeNumberTodayNew }}
-                  <div>今日充值人数</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" style="margin-top: 10px">
+          <el-col :span="8">
             <el-card shadow="hover" :body-style="{ padding: '0px' }">
               <div class="grid-content grid-con-3">
+                <i class="el-icon-s-goods grid-con-icon"></i>
                 <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.withdrawToday }}</div>
-                  <div>今日提现金额</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" style="margin-top: 10px">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-1">
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.userYesterday }}</div>
-                  <div>昨日新增用户数</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" style="margin-top: 10px">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-2">
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.rechargeYesterday }}</div>
-                  <div>昨日充值金额</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" style="margin-top: 10px">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-2">
-                <div class="grid-cont-right">
-                  <div class="grid-num">
-                    {{ data.rechargeNumberYesterday }}
-                  </div>
-                  新增充值人数：{{ data.rechargeNumberYesterdayNew }}
-                  <div>昨日充值人数</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" style="margin-top: 10px">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-3">
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.withdrawYesterday }}</div>
-                  <div>昨日提现金额</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" style="margin-top: 10px">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-1">
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.userAll }}</div>
-                  <div>用户总数</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" style="margin-top: 10px">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-2">
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.rechargeAll }}</div>
-                  <div>总充值金额</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" style="margin-top: 10px">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-2">
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.rechargeNumberAll }}</div>
-                  <div>总充值人数</div>
-                </div>
-              </div>
-            </el-card>
-          </el-col>
-          <el-col :span="6" style="margin-top: 10px">
-            <el-card shadow="hover" :body-style="{ padding: '0px' }">
-              <div class="grid-content grid-con-3">
-                <div class="grid-cont-right">
-                  <div class="grid-num">{{ data.withdrawAll }}</div>
-                  <div>总提现金额</div>
+                  <div class="grid-num">5000</div>
+                  <div>数量</div>
                 </div>
               </div>
             </el-card>
@@ -148,39 +63,23 @@
 
 <script>
 import Schart from "vue-schart";
-import { reactive } from "vue";
-import { Server } from "../api/admin";
-
 export default {
   name: "dashboard",
-  components: { Schart },
-  setup() {
-    const ser = new Server();
-    const name = localStorage.getItem("ms_username");
-    const role = name === "admin" ? "超级管理员" : "普通用户";
-    const data = reactive({
-      userToday: 0,
-      userAll: 0,
-      rechargeToday: 0,
-      rechargeAll: 0,
-      withdrawToday: 0,
-      withdrawAll: 0,
-    });
-    const getData = () => {
-      ser.count().then((res) => {
-        console.log(res);
-        Object.keys(res.data).forEach((item) => {
-          data[item] = res.data[item];
-        });
-      });
-    };
-    getData();
+  data() {
     return {
-      name,
-      role,
-      data,
+      name: localStorage.getItem("username"),
     };
   },
+  components: {
+    Schart,
+  },
+  computed: {
+    role() {
+      return localStorage.getItem("nickname");
+    },
+  },
+
+  methods: {},
 };
 </script>
 

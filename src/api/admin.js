@@ -9,9 +9,9 @@ export class Server {
       data: params,
     });
   }
-  info(token) {
+  userInfo(token) {
     return axios({
-      url: `${this.host}admin/user/info`,
+      url: `${this.host}admin/user/userInfo`,
       method: "get",
       headers: {
         authorization: token,
@@ -67,6 +67,13 @@ export class Server {
     return request({
       url: `admin/user/makeGoogleUrl`,
       method: "get",
+    });
+  }
+  info(params) {
+    return request({
+      url: `admin/user/info`,
+      method: "get",
+      params,
     });
   }
 }

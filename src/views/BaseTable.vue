@@ -214,7 +214,7 @@ export default {
 }
 .table {
   width: 100%;
-  font-size: 14px;
+  font-size: 10px;
 }
 .red {
   color: #ff0000;

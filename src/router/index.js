@@ -7,251 +7,54 @@ const routes = [
     redirect: "/dashboard",
   },
   {
-    path: "/",
-    name: "Home",
-    component: Home,
-    children: [
-      {
-        path: "/dashboard",
-        name: "dashboard",
-        meta: {
-          title: "系统首页",
-        },
-        component: () =>
-          import(/* webpackChunkName: "dashboard" */ "../views/Dashboard.vue"),
-      },
-      {
-        path: "/table",
-        name: "basetable",
-        meta: {
-          title: "表格",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/BaseTable.vue"),
-      },
-      {
-        path: "/charts",
-        name: "basecharts",
-        meta: {
-          title: "图表",
-        },
-        component: () =>
-          import(/* webpackChunkName: "charts" */ "../views/BaseCharts.vue"),
-      },
-      {
-        path: "/form",
-        name: "baseform",
-        meta: {
-          title: "表单",
-        },
-        component: () =>
-          import(/* webpackChunkName: "form" */ "../views/BaseForm.vue"),
-      },
-      {
-        path: "/tabs",
-        name: "tabs",
-        meta: {
-          title: "tab标签",
-        },
-        component: () =>
-          import(/* webpackChunkName: "tabs" */ "../views/Tabs.vue"),
-      },
-      {
-        path: "/donate",
-        name: "donate",
-        meta: {
-          title: "鼓励作者",
-        },
-        component: () =>
-          import(/* webpackChunkName: "donate" */ "../views/Donate.vue"),
-      },
-      {
-        path: "/permission",
-        name: "permission",
-        meta: {
-          title: "权限管理",
-          permission: true,
-        },
-        component: () =>
-          import(
-            /* webpackChunkName: "permission" */ "../views/Permission.vue"
-          ),
-      },
-      {
-        path: "/i18n",
-        name: "i18n",
-        meta: {
-          title: "国际化语言",
-        },
-        component: () =>
-          import(/* webpackChunkName: "i18n" */ "../views/I18n.vue"),
-      },
-      {
-        path: "/upload",
-        name: "upload",
-        meta: {
-          title: "上传插件",
-        },
-        component: () =>
-          import(/* webpackChunkName: "upload" */ "../views/Upload.vue"),
-      },
-      {
-        path: "/icon",
-        name: "icon",
-        meta: {
-          title: "自定义图标",
-        },
-        component: () =>
-          import(/* webpackChunkName: "icon" */ "../views/Icon.vue"),
-      },
-      {
-        path: "/404",
-        name: "404",
-        meta: {
-          title: "找不到页面",
-        },
-        component: () =>
-          import(/* webpackChunkName: "404" */ "../views/404.vue"),
-      },
-      {
-        path: "/403",
-        name: "403",
-        meta: {
-          title: "没有权限",
-        },
-        component: () =>
-          import(/* webpackChunkName: "403" */ "../views/403.vue"),
-      },
-      {
-        path: "/user",
-        name: "user",
-        meta: {
-          title: "个人中心",
-        },
-        component: () =>
-          import(/* webpackChunkName: "user" */ "../views/User.vue"),
-      },
-      {
-        path: "/member",
-        name: "member",
-        meta: {
-          title: "会员管理",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/member.vue"),
-      },
-      {
-        path: "/rate",
-        name: "rate",
-        meta: {
-          title: "比例设置",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/rate.vue"),
-      },
-      {
-        path: "/recharge",
-        name: "recharge",
-        meta: {
-          title: "充值列表",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/recharge.vue"),
-      },
-      {
-        path: "/withdraw",
-        name: "withdraw",
-        meta: {
-          title: "提现列表",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/withdraw.vue"),
-      },
-      {
-        path: "/profit",
-        name: "profit",
-        meta: {
-          title: "财务明细",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/profit.vue"),
-      },
-      {
-        path: "/account",
-        name: "account",
-        meta: {
-          title: "TRX账号",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/account.vue"),
-      },
-      {
-        path: "/notice",
-        name: "notice",
-        meta: {
-          title: "通告设置",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/notice.vue"),
-      },
-      {
-        path: "/param",
-        name: "param",
-        meta: {
-          title: "参数设置",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/param.vue"),
-      },
-      {
-        path: "/admin",
-        name: "admin",
-        meta: {
-          title: "用户列表",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/admin.vue"),
-      },
-      {
-        path: "/role",
-        name: "role",
-        meta: {
-          title: "角色列表",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/role.vue"),
-      },
-      {
-        path: "/menu",
-        name: "menu",
-        meta: {
-          title: "菜单列表",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/menu.vue"),
-      },
-      {
-        path: "/agent",
-        name: "agent",
-        meta: {
-          title: "代理列表",
-        },
-        component: () =>
-          import(/* webpackChunkName: "table" */ "../views/agent.vue"),
-      },
-    ],
-  },
-  {
     path: "/login",
-    name: "Login",
+    name: "login",
     meta: {
       title: "登录",
     },
     component: () =>
-      import(/* webpackChunkName: "login" */ "../views/Login.vue"),
+      import("../views/login.vue"),
   },
 ];
-
+const home = {
+  path: "/",
+  name: "Home",
+  component: Home,
+  children: [
+  ]
+}
+let menu = localStorage.getItem("menu");
+menu = JSON.parse(menu);
+menu.forEach((m) => {
+  if (m.key) {
+    home.children.push({
+      path: m.key,
+      name: m.key,
+      meta: {
+        title: m.name,
+      },
+      component: () =>
+        import(`../views/${m.key}.vue`),
+    })
+  }
+  if (m.children) {
+    m.children.forEach((mc) => {
+      if (mc.key) {
+        home.children.push({
+          path: mc.key,
+          name: mc.key,
+          meta: {
+            title: mc.name,
+          },
+          component: () =>
+            import(`../views/${mc.key}.vue`),
+        })
+      }
+    });
+  }
+})
+routes.push(home)
+console.log(routes)
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
@@ -259,7 +62,7 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title}`;
-  const role = localStorage.getItem("ms_username");
+  const role = localStorage.getItem("username");
   if (!role && to.path !== "/login") {
     next("/login");
   } else if (to.meta.permission) {

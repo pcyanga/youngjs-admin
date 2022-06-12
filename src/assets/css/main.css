@@ -23,7 +23,7 @@ a {
 
 .content-box {
     position: absolute;
-    left: 250px;
+    left: 200px;
     right: 0;
     top: 70px;
     bottom: 0;
@@ -148,7 +148,7 @@ a {
 
 .el-upload--text {
     color: #97a8be;
-    font-size: 14px;
+    font-size: 10px;
     text-align: center;
 }
 
@@ -175,3 +175,14 @@ a {
 .v-note-wrapper .v-note-panel {
     min-height: 500px;
 }
+
+.el-menu-item{
+    font-size: 10px;
+}
+.el-submenu__title{
+    font-size: 10px !important;
+
+}
+.el-menu-item {
+    font-size: 10px !important;
+  }

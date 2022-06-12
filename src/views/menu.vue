@@ -9,8 +9,10 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" @click="getAllMenu">刷新</el-button>
-        <el-button type="primary" @click="handleAdd({ id: 0 })"
+        <el-button type="primary" @click="getAllMenu" size="mini"
+          >刷新</el-button
+        >
+        <el-button type="primary" @click="handleAdd({ id: 0 })" size="mini"
           >添加顶部菜单</el-button
         >
       </div>
@@ -22,7 +24,7 @@
           row-key="id"
           :data="data"
           :indent="30"
-          :span-method="objectSpanMethod"
+          size="mini"
         >
           <el-table-column prop="name" label="名称">
             <template v-slot="{ row }">
@@ -31,7 +33,12 @@
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="key" label="地址" width="180" align="center" />
+          <el-table-column prop="key" label="地址" align="center" />
+          <el-table-column prop="icon" label="图标" align="center">
+            <template #default="scope1">
+              <i :class="`el-icon-lx-${scope1.row.icon}`"></i>
+            </template>
+          </el-table-column>
           <el-table-column prop="type" label="类型" align="center">
             <template #default="scope">
               <el-tag>{{
@@ -44,18 +51,20 @@
             </template>
           </el-table-column>
           <el-table-column prop="sort" label="排序" align="center" />
-          <el-table-column label="操作" width="180" align="center">
+          <el-table-column label="操作" width="300" align="center">
             <template #default="scope">
               <el-button
                 type="text"
                 icon="el-icon-edit"
                 @click="handleEdit(scope.row)"
+                size="mini"
                 >编辑
               </el-button>
               <el-button
                 type="text"
-                icon="el-icon-edit"
+                icon="el-icon-plus"
                 @click="handleAdd(scope.row)"
+                size="mini"
                 >添加
               </el-button>
               <el-button
@@ -63,6 +72,7 @@
                 icon="el-icon-delete"
                 class="red"
                 @click="handleDelete(scope.row)"
+                size="mini"
                 >删除</el-button
               >
             </template>
@@ -80,6 +90,21 @@
         </el-form-item>
         <el-form-item label="路径">
           <el-input v-model="form.key"></el-input>
+        </el-form-item>
+        <el-form-item label="图标">
+          <el-input v-model="form.icon" @click="iconPanelShow"></el-input>
+          <ul v-if="iconVisible" @blur="iconPanelHidden">
+            <li
+              class="icon-li"
+              v-for="(item, index) in iconList"
+              :key="index"
+              @click="iconClick(item)"
+            >
+              <div class="icon-li-content">
+                <i :class="`el-icon-lx-${item}`"></i>
+              </div>
+            </li>
+          </ul>
         </el-form-item>
         <el-form-item label="排序">
           <el-input v-model="form.sort"></el-input>
@@ -100,7 +125,7 @@
       </template>
     </el-dialog>
     <!-- 编辑弹出框 -->
-    <el-dialog title="添加" v-model="addVisible" width="30%">
+    <el-dialog title="添加" v-model="addVisible" width="50%">
       <el-form label-width="70px" :model="form">
         <el-input v-model="form.pid" type="hidden"></el-input>
         <el-input v-model="form.id" type="hidden"></el-input>
@@ -109,6 +134,21 @@
         </el-form-item>
         <el-form-item label="路径">
           <el-input v-model="form.key"></el-input>
+        </el-form-item>
+        <el-form-item label="图标">
+          <el-input v-model="form.icon" @click="iconPanelShow"></el-input>
+          <ul v-if="iconVisible" @blur="iconPanelHidden">
+            <li
+              class="icon-li"
+              v-for="(item, index) in iconList"
+              :key="index"
+              @click="iconClick(item)"
+            >
+              <div class="icon-li-content">
+                <i :class="`el-icon-lx-${item}`"></i>
+              </div>
+            </li>
+          </ul>
         </el-form-item>
         <el-form-item label="排序">
           <el-input v-model="form.sort" type="number"></el-input>
@@ -167,6 +207,7 @@ export default {
       name: "",
       sort: 0,
       key: "",
+      icon: "",
     });
     const handleEdit = (row) => {
       Object.keys(form).forEach((item) => {
@@ -192,7 +233,7 @@ export default {
       form.pid = data.id;
       form.name = "";
       form.key = "";
-      form.sort = "";
+      form.sort = 0;
       form.type = 1;
       addVisible.value = true;
     };
@@ -218,6 +259,156 @@ export default {
       });
     };
     getAllMenu();
+    const iconVisible = ref(false);
+    const iconList = [
+      "attentionforbidfill",
+      "attentionfill",
+      "tagfill",
+      "peoplefill",
+      "noticefill",
+      "mobilefill",
+      "voicefill",
+      "unlock",
+      "lock",
+      "home",
+      "homefill",
+      "deletefill",
+      "notificationfill",
+      "notificationforbidfill",
+      "likefill",
+      "commentfill",
+      "camerafill",
+      "warnfill",
+      "timefill",
+      "locationfill",
+      "favorfill",
+      "skinfill",
+      "newsfill",
+      "recordfill",
+      "emojifill",
+      "messagefill",
+      "goodsfill",
+      "crownfill",
+      "move",
+      "add",
+      "hotfill",
+      "servicefill",
+      "presentfill",
+      "picfill",
+      "rankfill",
+      "male",
+      "female",
+      "down",
+      "top",
+      "rechargefill",
+      "forwardfill",
+      "infofill",
+      "redpacket_fill",
+      "roundaddfill",
+      "friendaddfill",
+      "cartfill",
+      "more",
+      "moreandroid",
+      "back",
+      "right",
+      "shopfill",
+      "questionfill",
+      "roundclosefill",
+      "roundcheckfill",
+      "global",
+      "mail",
+      "punch",
+      "exit",
+      "upload",
+      "read",
+      "file",
+      "link",
+      "full",
+      "group",
+      "friend",
+      "profile",
+      "addressbook",
+      "calendar",
+      "text",
+      "copy",
+      "share",
+      "wifi",
+      "vipcard",
+      "weibo",
+      "remind",
+      "refresh",
+      "filter",
+      "settings",
+      "scan",
+      "qrcode",
+      "cascades",
+      "apps",
+      "sort",
+      "searchlist",
+      "search",
+      "edit",
+    ];
+    function iconPanelShow() {
+      iconVisible.value = true;
+    }
+    function iconPanelHidden() {
+      iconVisible.value = false;
+    }
+    function iconClick(icon) {
+      form.icon = icon;
+      iconVisible.value = false;
+    }
+    function isClickEL(el) {
+      console.log(el);
+      if (!isIE() || !el) return false;
+      var coords = getCoords(el);
+      var elTop = coords.top;
+      var elBottom = 0;
+      var elLeft = coords.left;
+      var elRight = 0;
+      var elHeight = el.offsetHeight;
+      var elWidth = el.offsetWidth;
+      elBottom = elTop + elHeight;
+      elRight = elLeft + elWidth;
+
+      var ev = window.event;
+      if (!ev) return false;
+      var mouseX = ev.clientX;
+      var mouseY = ev.clientY;
+
+      var isInTheWidth = mouseX >= elLeft && mouseX <= elRight;
+      var isInTheHeight = mouseY >= elTop && mouseY <= elBottom;
+      console.log(isInTheWidth && isInTheHeight);
+      return isInTheWidth && isInTheHeight;
+    }
+
+    var getCoords = function (el) {
+      var box = el.getBoundingClientRect(),
+        isQuirk = document.documentMode
+          ? document.documentMode == 5
+            ? true
+            : false
+          : document.compatMode == "CSS1Compat"
+          ? false
+          : true,
+        doc = el.ownerDocument,
+        body = doc.body,
+        html = doc.documentElement,
+        clientTop = html.clientTop || body.clientTop || 0,
+        clientLeft = html.clientLeft || body.clientLeft || 0,
+        top =
+          box.top +
+          (self.pageYOffset || (!isQuirk && html.scrollTop) || body.scrollTop) -
+          clientTop,
+        left =
+          box.left +
+          (self.pageXOffset ||
+            (!isQuirk && html.scrollLeft) ||
+            body.scrollLeft) -
+          clientLeft;
+      return { top: top, left: left };
+    };
+
     return {
       editVisible,
       form,
@@ -229,6 +420,12 @@ export default {
       saveAdd,
       data,
       getAllMenu,
+      iconVisible,
+      iconList,
+      iconPanelShow,
+      iconPanelHidden,
+      iconClick,
+      isClickEL,
     };
   },
 };
@@ -252,7 +449,7 @@ export default {
 }
 .table {
   width: 100%;
-  font-size: 14px;
+  font-size: 10px;
 }
 .red {
   color: #ff0000;
@@ -271,10 +468,36 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 14px;
+  font-size: 10px;
   padding-right: 8px;
 }
 .cell-content {
   display: inline-block;
+}
+ul,
+li {
+  list-style: none;
+}
+.icon-li {
+  display: inline-block;
+  padding: 10px;
+  width: 30px;
+  height: 30px;
+}
+.icon-li-content {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.icon-li-content i {
+  font-size: 15px;
+  color: #606266;
+}
+.icon-li-content span {
+  margin-top: 10px;
+  color: #787878;
 }
 </style>

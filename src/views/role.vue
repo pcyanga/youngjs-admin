@@ -9,25 +9,30 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" @click="handleSearch">刷新</el-button>
-        <el-button type="primary" @click="handleAdd">添加</el-button>
+        <el-button type="primary" @click="handleSearch" size="mini"
+          >刷新</el-button
+        >
+        <el-button type="primary" @click="handleAdd" size="mini"
+          >添加</el-button
+        >
         <el-input
           v-model="query.keywords"
           placeholder="角色"
           class="handle-input mr10"
           clearable
+          size="mini"
+          style="margin-left: 10px"
+          @keyup.enter="handleSearch"
         ></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="handleSearch"
+          size="mini"
           >搜索</el-button
         >
       </div>
-      <el-table
-        :data="tableData"
-        border
-        class="table"
-        ref="multipleTable"
-        header-cell-class-name="table-header"
-      >
+      <el-table :data="tableData" border ref="multipleTable" size="mini">
         <el-table-column
           prop="id"
           label="ID"
@@ -42,6 +47,7 @@
               type="text"
               icon="el-icon-edit"
               @click="handleEdit(scope.row)"
+              size="mini"
               >编辑
             </el-button>
             <el-button
@@ -49,6 +55,7 @@
               icon="el-icon-delete"
               class="red"
               @click="handleDelete(scope.row)"
+              size="mini"
               >删除</el-button
             >
           </template>
@@ -318,7 +325,7 @@ export default {
 }
 .table {
   width: 100%;
-  font-size: 14px;
+  font-size: 10px;
 }
 .red {
   color: #ff0000;

@@ -57,171 +57,26 @@ export default {
   setup() {
     let menu = localStorage.getItem("menu");
     menu = JSON.parse(menu);
-    const items = [
-      // {
-      //   icon: "el-icon-lx-home",
-      //   index: "/dashboard",
-      //   title: "首页",
-      // },
-      // {
-      //   icon: "el-icon-lx-calendar",
-      //   index: "3",
-      //   title: "会员管理",
-      //   subs: [
-      //     {
-      //       index: "/member",
-      //       title: "会员列表",
-      //     },
-      //     {
-      //       index: "/rate",
-      //       title: "比例设置",
-      //     },
-      //   ],
-      // },
-      // {
-      //   icon: "el-icon-lx-calendar",
-      //   index: "4",
-      //   title: "财务管理",
-      //   subs: [
-      //     {
-      //       index: "/recharge",
-      //       title: "充值列表",
-      //     },
-      //     {
-      //       index: "/withdraw",
-      //       title: "提现列表",
-      //     },
-      //     {
-      //       index: "/profit",
-      //       title: "财务明细",
-      //     },
-      //   ],
-      // },
-      // {
-      //   icon: "el-icon-lx-calendar",
-      //   index: "5",
-      //   title: "其他设置",
-      //   subs: [
-      //     {
-      //       index: "/account",
-      //       title: "TRX账号",
-      //     },
-      //     {
-      //       index: "/notice",
-      //       title: "通告列表",
-      //     },
-      //     {
-      //       index: "/param",
-      //       title: "参数设置",
-      //     },
-      //   ],
-      // },
-      // {
-      //   icon: "el-icon-lx-calendar",
-      //   index: "6",
-      //   title: "系统设置",
-      //   subs: [
-      //     {
-      //       index: "/user",
-      //       title: "用户列表",
-      //     },
-      //     {
-      //       index: "/role",
-      //       title: "角色列表",
-      //     },
-      //     {
-      //       index: "/menu",
-      //       title: "菜单设置",
-      //     },
-      //   ],
-      // },
-      // {
-      //   icon: "el-icon-lx-cascades",
-      //   index: "/table",
-      //   title: "基础表格",
-      // },
-      // {
-      //   icon: "el-icon-lx-copy",
-      //   index: "/tabs",
-      //   title: "tab选项卡",
-      // },
-      // {
-      //   icon: "el-icon-lx-calendar",
-      //   index: "3",
-      //   title: "表单相关",
-      //   subs: [
-      //     {
-      //       index: "/form",
-      //       title: "基本表单",
-      //     },
-      //     {
-      //       index: "/upload",
-      //       title: "文件上传",
-      //     },
-      //     {
-      //       index: "4",
-      //       title: "三级菜单",
-      //       subs: [
-      //         {
-      //           index: "/editor",
-      //           title: "富文本编辑器",
-      //         },
-      //       ],
-      //     },
-      //   ],
-      // },
-      // {
-      //   icon: "el-icon-lx-emoji",
-      //   index: "/icon",
-      //   title: "自定义图标",
-      // },
-      // {
-      //   icon: "el-icon-pie-chart",
-      //   index: "/charts",
-      //   title: "schart图表",
-      // },
-      // {
-      //   icon: "el-icon-lx-global",
-      //   index: "/i18n",
-      //   title: "国际化功能",
-      // },
-      // {
-      //   icon: "el-icon-lx-warn",
-      //   index: "7",
-      //   title: "错误处理",
-      //   subs: [
-      //     {
-      //       index: "/permission",
-      //       title: "权限测试",
-      //     },
-      //     {
-      //       index: "/404",
-      //       title: "404页面",
-      //     },
-      //   ],
-      // },
-      // {
-      //   icon: "el-icon-lx-redpacket_fill",
-      //   index: "/donate",
-      //   title: "支持作者",
-      // },
-    ];
+    const items = [];
     menu.forEach((m) => {
       if (m.type == 1 || m.type == 2) {
+        console.log(m.icon);
         const tmp = {
-          icon: "el-icon-lx-calendar",
+          icon: m.icon ? `el-icon-lx-${m.icon}` : "el-icon-lx-calendar",
           index: m.type == 1 ? m.id : m.key,
           title: m.name,
           subs: [],
         };
-        m.children.forEach((mc) => {
-          if (mc.type == 2) {
-            tmp.subs.push({
-              index: mc.key,
-              title: mc.name,
-            });
-          }
-        });
+        if (m.children) {
+          m.children.forEach((mc) => {
+            if (mc.type == 2) {
+              tmp.subs.push({
+                index: mc.key,
+                title: mc.name,
+              });
+            }
+          });
+        }
         if (tmp.subs.length == 0) delete tmp.subs;
         items.push(tmp);
       }
@@ -257,7 +112,7 @@ export default {
   width: 0;
 }
 .sidebar-el-menu:not(.el-menu--collapse) {
-  width: 250px;
+  width: 200px;
 }
 .sidebar > ul {
   height: 100%;

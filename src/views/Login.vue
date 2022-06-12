@@ -75,9 +75,10 @@ export default {
             .then((res) => {
               if (res.code == 1000) {
                 ElMessage.success("登录成功");
-                localStorage.setItem("ms_username", param.username);
+                localStorage.setItem("username", param.username);
+                localStorage.setItem("nickname", param.nickname);
                 localStorage.setItem("token", res.data.token);
-                ser.info(res.data.token).then((res) => {
+                ser.userInfo(res.data.token).then((res) => {
                   if (res.code == 1000) {
                     const r = getFirstMenu(res.data.menu) || "/";
                     localStorage.setItem("menu", JSON.stringify(res.data.menu));
