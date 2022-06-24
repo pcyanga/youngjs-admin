@@ -12,49 +12,47 @@ const routes = [
     meta: {
       title: "登录",
     },
-    component: () =>
-      import("../views/login.vue"),
+    component: () => import("../views/login.vue"),
   },
 ];
 const home = {
   path: "/",
   name: "Home",
   component: Home,
-  children: [
-  ]
-}
+  children: [],
+};
 let menu = localStorage.getItem("menu");
 menu = JSON.parse(menu);
-menu.forEach((m) => {
-  if (m.key) {
-    home.children.push({
-      path: m.key,
-      name: m.key,
-      meta: {
-        title: m.name,
-      },
-      component: () =>
-        import(`../views/${m.key}.vue`),
-    })
-  }
-  if (m.children) {
-    m.children.forEach((mc) => {
-      if (mc.key) {
-        home.children.push({
-          path: mc.key,
-          name: mc.key,
-          meta: {
-            title: mc.name,
-          },
-          component: () =>
-            import(`../views/${mc.key}.vue`),
-        })
-      }
-    });
-  }
-})
-routes.push(home)
-console.log(routes)
+if (menu && menu.length) {
+  menu.forEach((m) => {
+    if (m.key) {
+      home.children.push({
+        path: m.key,
+        name: m.key,
+        meta: {
+          title: m.name,
+        },
+        component: () => import(`../views/${m.key}.vue`),
+      });
+    }
+    if (m.children) {
+      m.children.forEach((mc) => {
+        if (mc.key) {
+          home.children.push({
+            path: mc.key,
+            name: mc.key,
+            meta: {
+              title: mc.name,
+            },
+            component: () => import(`../views/${mc.key}.vue`),
+          });
+        }
+      });
+    }
+  });
+  routes.push(home);
+}
+console.log(routes);
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
