@@ -115,7 +115,7 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/user";
+import { Server } from "../api/admin";
 
 export default {
   name: "basetable",
