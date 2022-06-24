@@ -28,13 +28,6 @@
             </template>
           </el-input>
         </el-form-item>
-        <el-form-item prop="code">
-          <el-input v-model="param.code" placeholder="谷歌密码">
-            <template #prepend>
-              <el-button icon="el-icon-lock"></el-button>
-            </template>
-          </el-input>
-        </el-form-item>
         <div class="login-btn">
           <el-button type="primary" @click="submitForm()">登录</el-button>
         </div>
