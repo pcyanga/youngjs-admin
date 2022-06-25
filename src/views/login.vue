@@ -42,6 +42,7 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
 import { Server } from "../api/admin";
+import setRouters from "../api/router";
 
 export default {
   setup() {
@@ -73,6 +74,8 @@ export default {
                 localStorage.setItem("token", res.data.token);
                 ser.userInfo(res.data.token).then((res) => {
                   if (res.code == 1000) {
+                    const menu = setRouters(res.data.menu);
+                    router.addRoute(menu);
                     localStorage.setItem("menu", JSON.stringify(res.data.menu));
                     const r = getFirstMenu(res.data.menu) || "/";
                     router.push(r);

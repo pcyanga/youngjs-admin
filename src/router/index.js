@@ -1,11 +1,6 @@
 import { createRouter, createWebHashHistory } from "vue-router";
-import Home from "../views/Home.vue";
-
+import setRouters from "../api/router";
 const routes = [
-  {
-    path: "/",
-    redirect: "/dashboard",
-  },
   {
     path: "/login",
     name: "login",
@@ -15,44 +10,10 @@ const routes = [
     component: () => import("../views/login.vue"),
   },
 ];
-const home = {
-  path: "/",
-  name: "Home",
-  component: Home,
-  children: [],
-};
 let menu = localStorage.getItem("menu");
 menu = JSON.parse(menu);
-if (menu && menu.length) {
-  menu.forEach((m) => {
-    if (m.key) {
-      home.children.push({
-        path: m.key,
-        name: m.key,
-        meta: {
-          title: m.name,
-        },
-        component: () => import(`../views/${m.key}.vue`),
-      });
-    }
-    if (m.children) {
-      m.children.forEach((mc) => {
-        if (mc.key) {
-          home.children.push({
-            path: mc.key,
-            name: mc.key,
-            meta: {
-              title: mc.name,
-            },
-            component: () => import(`../views/${mc.key}.vue`),
-          });
-        }
-      });
-    }
-  });
-  routes.push(home);
-}
-console.log(routes);
+const home = setRouters(menu)
+routes.push(home);
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
@@ -70,5 +31,4 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-
 export default router;
