@@ -73,8 +73,8 @@ export default {
                 localStorage.setItem("token", res.data.token);
                 ser.userInfo(res.data.token).then((res) => {
                   if (res.code == 1000) {
-                    const r = getFirstMenu(res.data.menu) || "/";
                     localStorage.setItem("menu", JSON.stringify(res.data.menu));
+                    const r = getFirstMenu(res.data.menu) || "/";
                     router.push(r);
                   }
                 });
