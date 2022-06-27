@@ -21,8 +21,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   document.title = `${to.meta.title}`;
-  const role = localStorage.getItem("username");
-  if (!role && to.path !== "/login") {
+  const token = localStorage.getItem("token");
+  if (!token && to.path !== "/login") {
     next("/login");
   } else if (to.meta.permission) {
     // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已

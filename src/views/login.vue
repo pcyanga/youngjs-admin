@@ -69,15 +69,14 @@ export default {
             .then((res) => {
               if (res.code == 1000) {
                 ElMessage.success("登录成功");
-                localStorage.setItem("username", param.username);
-                localStorage.setItem("nickname", param.nickname);
                 localStorage.setItem("token", res.data.token);
                 ser.userInfo(res.data.token).then((res) => {
                   if (res.code == 1000) {
+                    localStorage.setItem("userinfo", JSON.stringify(res.data));
                     const menu = setRouters(res.data.menu);
                     router.addRoute(menu);
-                    localStorage.setItem("menu", JSON.stringify(res.data.menu));
                     const r = getFirstMenu(res.data.menu) || "/";
+                    console.log(r);
                     router.push(r);
                   }
                 });

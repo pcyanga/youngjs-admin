@@ -6,17 +6,17 @@
           <div class="user-info">
             <img src="../assets/img/img.jpg" class="user-avator" alt />
             <div class="user-info-cont">
-              <div class="user-info-name">{{ name }}</div>
-              <div>{{ role }}</div>
+              <div class="user-info-name">{{ nickname }}</div>
+              <div>{{ username }}</div>
             </div>
           </div>
           <div class="user-info-list">
-            上次登录时间：
-            <span>2019-11-01</span>
+            本次登录IP：
+            <span>{{ ip }}</span>
           </div>
           <div class="user-info-list">
-            上次登录地点：
-            <span>东莞</span>
+            本次登录地点：
+            <span>{{ ipAddr }}</span>
           </div>
         </el-card>
       </el-col>
@@ -66,9 +66,9 @@ import Schart from "vue-schart";
 export default {
   name: "dashboard",
   data() {
-    return {
-      name: localStorage.getItem("username"),
-    };
+    let userinfo = localStorage.getItem("userinfo");
+    userinfo = JSON.parse(userinfo);
+    return userinfo;
   },
   components: {
     Schart,

@@ -5,7 +5,7 @@
       <i v-if="!collapse" class="el-icon-s-fold"></i>
       <i v-else class="el-icon-s-unfold"></i>
     </div>
-    <div class="logo">后台管理系统</div>
+    <div class="logo">Youngjs后台管理系统</div>
     <div class="header-right">
       <div class="header-user-con">
         <!-- 消息中心 -->
@@ -24,7 +24,7 @@
         <!-- 用户名下拉菜单 -->
         <el-dropdown class="user-name" trigger="click" @command="handleCommand">
           <span class="el-dropdown-link">
-            {{ username }}
+            {{ userinfo.nickname }}
             <i class="el-icon-caret-bottom"></i>
           </span>
           <template #dropdown>
@@ -46,7 +46,8 @@ import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 export default {
   setup() {
-    const username = localStorage.getItem("username");
+    let userinfo = localStorage.getItem("userinfo");
+    userinfo = JSON.parse(userinfo);
     const message = 2;
 
     const store = useStore();
@@ -75,7 +76,7 @@ export default {
     };
 
     return {
-      username,
+      userinfo,
       message,
       collapse,
       collapseChage,
