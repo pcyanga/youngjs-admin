@@ -7,6 +7,14 @@ const setRouters = (menu) => {
     component: Home,
     children: [],
   };
+  home.children.push({
+    path: "/user",
+    name: "user",
+    meta: {
+      title: "个人中心",
+    },
+    component: () => import("../views/user.vue"),
+  });
   if (menu && menu.length) {
     menu.forEach((m) => {
       if (m.key) {
@@ -28,8 +36,7 @@ const setRouters = (menu) => {
               meta: {
                 title: mc.name,
               },
-              component: () =>
-                import(`../views/${mc.key}.vue`),
+              component: () => import(`../views/${mc.key}.vue`),
             });
           }
         });
@@ -37,6 +44,5 @@ const setRouters = (menu) => {
     });
   }
   return home;
-}
+};
 export default setRouters;
-

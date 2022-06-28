@@ -12,7 +12,7 @@ const routes = [
 ];
 let menu = localStorage.getItem("menu");
 menu = JSON.parse(menu);
-const home = setRouters(menu)
+const home = setRouters(menu);
 routes.push(home);
 const router = createRouter({
   history: createWebHashHistory(),

@@ -119,7 +119,7 @@ export default {
         .userInfo(token)
         .then((res) => {
           if (res.code == 1000) {
-            localStorage.setItem("username", res.data.nickname);
+            localStorage.setItem("userinfo", JSON.stringify(res.data));
             localStorage.setItem("menu", JSON.stringify(res.data.menu));
           }
         })

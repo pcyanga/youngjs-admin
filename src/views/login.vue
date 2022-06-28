@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrap">
     <div class="ms-login">
-      <div class="ms-title">后台管理系统</div>
+      <div class="ms-title">Youngjs后台管理系统</div>
       <el-form
         :model="param"
         :rules="rules"
@@ -10,7 +10,7 @@
         class="ms-content"
       >
         <el-form-item prop="username">
-          <el-input v-model="param.username" placeholder="用户名">
+          <el-input v-model="param.username" placeholder="用户名：admin">
             <template #prepend>
               <el-button icon="el-icon-user"></el-button>
             </template>
@@ -19,7 +19,7 @@
         <el-form-item prop="password">
           <el-input
             type="password"
-            placeholder="密码"
+            placeholder="密码：123456"
             v-model="param.password"
             @keyup.enter="submitForm()"
           >
@@ -73,6 +73,7 @@ export default {
                 ser.userInfo(res.data.token).then((res) => {
                   if (res.code == 1000) {
                     localStorage.setItem("userinfo", JSON.stringify(res.data));
+                    localStorage.setItem("menu", JSON.stringify(res.data.menu));
                     const menu = setRouters(res.data.menu);
                     router.addRoute(menu);
                     const r = getFirstMenu(res.data.menu) || "/";
