@@ -58,29 +58,58 @@ export default {
     let menu = localStorage.getItem("menu");
     menu = JSON.parse(menu);
     const items = [];
-    menu.forEach((m) => {
-      if (m.type == 1 || m.type == 2) {
-        console.log(m.icon);
-        const tmp = {
-          icon: m.icon ? `el-icon-lx-${m.icon}` : "el-icon-lx-calendar",
-          index: m.type == 1 ? m.id : m.key,
-          title: m.name,
-          subs: [],
-        };
-        if (m.children) {
-          m.children.forEach((mc) => {
-            if (mc.type == 2) {
-              tmp.subs.push({
-                index: mc.key,
-                title: mc.name,
-              });
-            }
+    const setMenu = () => {
+      menu.forEach((m) => {
+        if (m.type == 1 || m.type == 2) {
+          const tmp = {
+            icon: m.icon ? `el-icon-lx-${m.icon}` : "el-icon-lx-calendar",
+            index: m.type == 1 ? m.id : m.key,
+            title: m.name,
+            subs: [],
+          };
+          if (m.children) {
+            m.children.forEach((mc) => {
+              if (mc.type == 2) {
+                tmp.subs.push({
+                  index: mc.key,
+                  title: mc.name,
+                });
+              }
+              if (mc.type == 1) {
+                tmp.subs.push({
+                  index: mc.key,
+                  title: mc.name,
+                  subs: setChildren(mc.children),
+                });
+              }
+            });
+          }
+          if (tmp.subs.length == 0) delete tmp.subs;
+          items.push(tmp);
+        }
+      });
+    };
+    const setChildren = (menu) => {
+      let itemTmp = [];
+      menu.forEach((m) => {
+        if (m.type == 2) {
+          itemTmp.push({
+            index: m.key,
+            title: m.name,
           });
         }
-        if (tmp.subs.length == 0) delete tmp.subs;
-        items.push(tmp);
-      }
-    });
+        if (m.type == 1) {
+          itemTmp.push({
+            index: m.key,
+            title: m.name,
+            subs: setChildren(m.children),
+          });
+        }
+      });
+      return itemTmp;
+    };
+    setMenu(menu);
+
     const route = useRoute();
 
     const onRoutes = computed(() => {
