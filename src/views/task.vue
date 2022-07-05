@@ -244,6 +244,7 @@ export default {
     const editVisible = ref(false);
     const addVisible = ref(false);
     let form = reactive({
+      id: 0,
       name: "",
       type: "1",
       limit: "",
@@ -259,6 +260,7 @@ export default {
       form.every = "";
       form.status = true;
       form.service = "";
+      from.id = 0;
       addVisible.value = true;
     };
     const saveAdd = () => {
