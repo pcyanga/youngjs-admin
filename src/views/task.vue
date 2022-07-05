@@ -284,10 +284,10 @@ export default {
       editVisible.value = true;
     };
     const saveEdit = () => {
-      data.status = data.status ? 1 : 0;
-      data.every = data.every || 0;
-      data.limit = data.limit || 0;
-      ser.update(data).then((res) => {
+      form.status = form.status ? 1 : 0;
+      form.every = form.every || 0;
+      form.limit = form.limit || 0;
+      ser.update(form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
           editVisible.value = false;
