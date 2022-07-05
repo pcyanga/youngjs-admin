@@ -13,9 +13,17 @@
           v-model="query.name"
           placeholder="任务名称"
           class="handle-input mr10"
+          size="mini"
         ></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+        <el-button
+          type="primary"
+          icon="el-icon-search"
+          @click="handleSearch"
+          size="mini"
           >搜索</el-button
+        >
+        <el-button type="success" @click="handleAdd" size="mini"
+          >添加</el-button
         >
       </div>
       <el-table
@@ -39,7 +47,7 @@
         </el-table-column>
         <el-table-column label="定时内容">
           <template #default="scope">{{
-            scope.row.type == 2 ? scope.row.cron : scope.row.every
+            scope.row.type == 2 ? scope.row.cron : scope.row.every + "(ms/次)"
           }}</template>
         </el-table-column>
         <el-table-column label="次数限制">
@@ -66,10 +74,7 @@
             <el-button type="text" @click="handleEdit(scope.row)"
               >编辑
             </el-button>
-            <el-button
-              type="text"
-              class="red"
-              @click="handleDelete(scope.$index, scope.row)"
+            <el-button type="text" class="red" @click="handleDelete(scope.row)"
               >删除</el-button
             >
           </template>
@@ -89,7 +94,7 @@
 
     <!-- 编辑弹出框 -->
     <el-dialog title="编辑" v-model="editVisible" width="30%">
-      <el-form label-width="70px">
+      <el-form label-width="100px">
         <el-form-item label="任务名称">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
@@ -102,14 +107,21 @@
         <el-form-item label="cron" v-if="form.type == 2">
           <el-input v-model="form.cron"></el-input>
         </el-form-item>
-        <el-form-item label="时间间隔" v-if="form.type == 1">
-          <el-input v-model="form.every"></el-input>
+        <el-form-item label="时间间隔(ms)" v-if="form.type == 1">
+          <el-input v-model="form.every" type="number"></el-input>
         </el-form-item>
         <el-form-item label="次数限制">
-          <el-input v-model="form.limit" placeholder=""></el-input>
+          <el-input
+            v-model="form.limit"
+            placeholder="不填则不限制"
+            type="number"
+          ></el-input>
         </el-form-item>
         <el-form-item label="执行方法">
-          <el-input v-model="form.service" placeholder=""></el-input>
+          <el-input
+            v-model="form.service"
+            placeholder="类名.方法名，例：Test.test()"
+          ></el-input>
         </el-form-item>
         <el-form-item label="开关">
           <el-switch v-model="form.status"> </el-switch>
@@ -119,6 +131,48 @@
         <span class="dialog-footer">
           <el-button @click="editVisible = false">取 消</el-button>
           <el-button type="primary" @click="saveEdit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
+    <!-- 新增弹出框 -->
+    <el-dialog title="新增" v-model="addVisible" width="30%">
+      <el-form label-width="100px">
+        <el-form-item label="任务名称">
+          <el-input v-model="form.name"></el-input>
+        </el-form-item>
+        <el-form-item label="定时方式">
+          <el-select v-model="form.type">
+            <el-option key="1" value="1" label="时间间隔"></el-option>
+            <el-option key="2" value="2" label="cron"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="cron" v-if="form.type == 2">
+          <el-input v-model="form.cron"></el-input>
+        </el-form-item>
+        <el-form-item label="时间间隔(ms)" v-if="form.type == 1">
+          <el-input v-model="form.every" type="number"></el-input>
+        </el-form-item>
+        <el-form-item label="次数限制">
+          <el-input
+            v-model="form.limit"
+            placeholder="不填则不限制"
+            type="number"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="执行方法">
+          <el-input
+            v-model="form.service"
+            placeholder="类名.方法名，例：Test.test()"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="开关">
+          <el-switch v-model="form.status"> </el-switch>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="addVisible = false">取 消</el-button>
+          <el-button type="primary" @click="saveAdd">确 定</el-button>
         </span>
       </template>
     </el-dialog>
@@ -167,20 +221,28 @@ export default {
     };
 
     // 删除操作
-    const handleDelete = (index) => {
+    // 删除操作
+    const handleDelete = (rows) => {
       // 二次确认删除
       ElMessageBox.confirm("确定要删除吗？", "提示", {
         type: "warning",
       })
         .then(() => {
-          ElMessage.success("删除成功");
-          tableData.value.splice(index, 1);
+          ser.delete({ ids: rows.id }).then((res) => {
+            if (res.code == 1000) {
+              ElMessage.success(`删除成功`);
+              getData();
+            } else {
+              ElMessage.error(`删除失败:${res.message}`);
+            }
+          });
         })
         .catch(() => {});
     };
 
     // 表格编辑时弹窗和保存
     const editVisible = ref(false);
+    const addVisible = ref(false);
     let form = reactive({
       name: "",
       type: "1",
@@ -188,7 +250,32 @@ export default {
       cron: "",
       every: "",
       status: true,
+      service: "",
     });
+    const handleAdd = () => {
+      form.name = "";
+      form.type = "1";
+      form.cron = "";
+      form.every = "";
+      form.status = true;
+      form.service = "";
+      addVisible.value = true;
+    };
+    const saveAdd = () => {
+      editVisible.value = false;
+      form.status = form.status ? 1 : 0;
+      form.every = form.every || 0;
+      form.limit = form.limit || 0;
+      ser.add(form).then((res) => {
+        if (res.code == 1000) {
+          ElMessage.success(`添加成功`);
+          addVisible.value = false;
+          getData();
+        } else {
+          ElMessage.error(`添加失败:${res.message}`);
+        }
+      });
+    };
     const handleEdit = (row) => {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
@@ -197,11 +284,13 @@ export default {
       editVisible.value = true;
     };
     const saveEdit = () => {
-      editVisible.value = false;
       data.status = data.status ? 1 : 0;
+      data.every = data.every || 0;
+      data.limit = data.limit || 0;
       ser.update(data).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
+          editVisible.value = false;
           getData();
         } else {
           ElMessage.error(`修改失败:${res.message}`);
@@ -226,6 +315,7 @@ export default {
       tableData,
       pageTotal,
       editVisible,
+      addVisible,
       form,
       handleSearch,
       handlePageChange,
@@ -233,6 +323,8 @@ export default {
       handleEdit,
       saveEdit,
       changeStatus,
+      handleAdd,
+      saveAdd,
     };
   },
 };
