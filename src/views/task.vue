@@ -74,6 +74,7 @@
             <el-button type="text" @click="handleEdit(scope.row)"
               >编辑
             </el-button>
+            <el-button type="text" @click="log(scope.row)">日志</el-button>
             <el-button type="text" class="red" @click="handleDelete(scope.row)"
               >删除</el-button
             >
@@ -175,6 +176,42 @@
           <el-button type="primary" @click="saveAdd">确 定</el-button>
         </span>
       </template>
+    </el-dialog>
+    <!-- 日志 -->
+    <el-dialog :title="title" v-model="logVisible" width="60%">
+      <el-table
+        :data="logTableData"
+        border
+        class="table"
+        ref="multipleTable"
+        header-cell-class-name="table-header"
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+          width="55"
+          align="center"
+        ></el-table-column>
+        <el-table-column label="结果">
+          <template #default="scope">{{ scope.row.result }}</template>
+        </el-table-column>
+        <el-table-column label="状态">
+          <template #default="scope">{{
+            scope.row.status == 1 ? "成功" : "失败"
+          }}</template>
+        </el-table-column>
+        <el-table-column prop="createTime" label="执行时间"></el-table-column>
+      </el-table>
+      <div class="pagination">
+        <el-pagination
+          background
+          layout="total, prev, pager, next"
+          :current-page="logQuery.page"
+          :page-size="logQuery.size"
+          :total="logPageTotal"
+          @current-change="handlePageChange1"
+        ></el-pagination>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -311,6 +348,40 @@ export default {
         }
       });
     };
+    const logQuery = reactive({
+      page: 1,
+      size: 10,
+      taskId: 0,
+      order: { createTime: "desc" },
+    });
+    const title = ref("日志");
+    const logVisible = ref(false);
+    const logTableData = ref([]);
+    const logPageTotal = ref(0);
+    const log = (row) => {
+      if (row) {
+        title.value = `[${row.name}]日志`;
+        logQuery.taskId = row.id;
+      }
+      ser.log(logQuery).then((res) => {
+        if (res.code == 1000) {
+          res.data.list.forEach((l) => {
+            l.createTime = moment(l.createTime).format("MM-DD HH:mm");
+          });
+          logTableData.value = res.data.list;
+          logPageTotal.value = res.data.pagination.total;
+          logQuery.size = res.data.pagination.size;
+          logQuery.page = res.data.pagination.page;
+          logVisible.value = true;
+        } else {
+          ElMessage.error(`获取失败:${res.message}`);
+        }
+      });
+    };
+    const handlePageChange1 = (val) => {
+      logQuery.page = val;
+      log();
+    };
 
     return {
       query,
@@ -327,6 +398,13 @@ export default {
       changeStatus,
       handleAdd,
       saveAdd,
+      title,
+      logVisible,
+      log,
+      logQuery,
+      logTableData,
+      logPageTotal,
+      handlePageChange1,
     };
   },
 };

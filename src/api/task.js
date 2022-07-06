@@ -28,4 +28,11 @@ export class Server {
       data: params,
     });
   }
+  log(params) {
+    return request({
+      url: `admin/task_log/page`,
+      method: "post",
+      data: params,
+    });
+  }
 }
