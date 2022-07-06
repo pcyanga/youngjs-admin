@@ -72,6 +72,12 @@ a {
 
 .el-button+.el-tooltip {
     margin-left: 10px;
+    font-size: 10px !important;
+}
+
+
+.el-button  {
+    font-size: 10px !important;
 }
 
 .el-table tr:hover {

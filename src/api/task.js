@@ -35,4 +35,11 @@ export class Server {
       data: params,
     });
   }
+  doNow(params) {
+    return request({
+      url: `admin/task/doNow`,
+      method: "get",
+      params,
+    });
+  }
 }

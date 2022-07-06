@@ -75,6 +75,9 @@
               >编辑
             </el-button>
             <el-button type="text" @click="log(scope.row)">日志</el-button>
+            <el-button type="text" @click="doNow(scope.row.id)"
+              >执行一次</el-button
+            >
             <el-button type="text" class="red" @click="handleDelete(scope.row)"
               >删除</el-button
             >
@@ -297,7 +300,7 @@ export default {
       form.every = "";
       form.status = true;
       form.service = "";
-      from.id = 0;
+      form.id = 0;
       addVisible.value = true;
     };
     const saveAdd = () => {
@@ -382,7 +385,16 @@ export default {
       logQuery.page = val;
       log();
     };
-
+    const doNow = (id) => {
+      ser.doNow({ id }).then((res) => {
+        if (res.code == 1000) {
+          ElMessage.success(`执行成功`);
+          getData();
+        } else {
+          ElMessage.error(`执行失败:${res.message}`);
+        }
+      });
+    };
     return {
       query,
       tableData,
@@ -405,6 +417,7 @@ export default {
       logTableData,
       logPageTotal,
       handlePageChange1,
+      doNow,
     };
   },
 };
