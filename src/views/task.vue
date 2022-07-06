@@ -45,7 +45,7 @@
             scope.row.type == 2 ? "cron" : "时间间隔"
           }}</template>
         </el-table-column>
-        <el-table-column label="定时内容">
+        <el-table-column label="执行时间">
           <template #default="scope">{{
             scope.row.type == 2 ? scope.row.cron : scope.row.every + "(ms/次)"
           }}</template>
