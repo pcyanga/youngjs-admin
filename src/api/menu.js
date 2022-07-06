@@ -28,4 +28,11 @@ export class Server {
       params,
     });
   }
+  getRouters(params) {
+    return request({
+      url: `admin/menu/getRouters`,
+      method: "get",
+      params,
+    });
+  }
 }

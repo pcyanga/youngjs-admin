@@ -135,6 +135,15 @@
         <el-form-item label="路径">
           <el-input v-model="form.key"></el-input>
         </el-form-item>
+        <el-form-item label="权限组">
+          <el-cascader
+            v-model="form.actions"
+            :options="options"
+            :props="props"
+            collapse-tags
+            clearable
+          ></el-cascader>
+        </el-form-item>
         <el-form-item label="图标">
           <el-input v-model="form.icon" @click="iconPanelShow"></el-input>
           <ul v-if="iconVisible" @blur="iconPanelHidden">
@@ -208,6 +217,7 @@ export default {
       sort: 0,
       key: "",
       icon: "",
+      actions: [],
     });
     const handleEdit = (row) => {
       Object.keys(form).forEach((item) => {
@@ -408,7 +418,16 @@ export default {
           clientLeft;
       return { top: top, left: left };
     };
-
+    const options = ref([]);
+    const getRouters = () => {
+      ser.getRouters().then((res) => {
+        if (res.code == 1000) {
+          options.value = res.data;
+        }
+      });
+    };
+    getRouters();
+    const props = { multiple: true };
     return {
       editVisible,
       form,
@@ -426,6 +445,8 @@ export default {
       iconPanelHidden,
       iconClick,
       isClickEL,
+      options,
+      props,
     };
   },
 };
