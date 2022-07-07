@@ -131,7 +131,7 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/role";
+import { Server } from "../api/api";
 import moment from "moment";
 import * as _ from "lodash";
 export default {
@@ -155,7 +155,7 @@ export default {
     const pageTotal = ref(0);
     // 获取表格数据
     const getData = () => {
-      ser.page(query).then((res) => {
+      ser.req("system/role/page", query).then((res) => {
         res.data.list.forEach((l) => {
           l.createTime = moment(l.createTime).format("MM-DD HH:mm");
         });
@@ -183,7 +183,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          ser.delete({ ids: rows.id }).then((res) => {
+          ser.req("system/role/delete", { ids: rows.id }).then((res) => {
             if (res.code == 1000) {
               ElMessage.success(`删除成功`);
               getData();
@@ -216,7 +216,7 @@ export default {
       form.menuIds = tree.value
         .getCheckedKeys()
         .concat(tree.value.getHalfCheckedKeys());
-      ser.update(form).then((res) => {
+      ser.req("system/role/update", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
         } else {
@@ -236,7 +236,7 @@ export default {
       form.menuIds = tree.value.getCheckedKeys();
       formRef.value.validate((valid) => {
         if (valid) {
-          ser.add(form).then((res) => {
+          ser.req("system/role/add", form).then((res) => {
             if (res.code == 1000) {
               ElMessage.success(`添加成功`);
               addVisible.value = false;
@@ -252,7 +252,7 @@ export default {
     const check = ref([]);
     let leaf = [];
     const getRoleMenu = (roleId) => {
-      ser.getRoleMenu({ roleId }).then((res) => {
+      ser.req("system/role/getRoleMenu", { roleId }).then((res) => {
         let dlist = [];
         if (res.code == 1000) {
           res.data.forEach((r) => {
@@ -265,7 +265,7 @@ export default {
       });
     };
     const getAllMenu = () => {
-      ser.getAllMenu().then((res) => {
+      ser.req("system/menu/list").then((res) => {
         if (res.code == 1000) {
           res.data.forEach((r) => {
             if (r.children.length > 0) leaf.push(Number(r.id));

@@ -10,7 +10,7 @@
     <div class="container">
       <div class="handle-box">
         <el-input
-          v-model="query.name"
+          v-model="query.keywords"
           placeholder="任务名称"
           class="handle-input mr10"
           size="mini"
@@ -222,7 +222,7 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/task";
+import { Server } from "../api/api";
 import moment from "moment";
 
 export default {
@@ -230,7 +230,7 @@ export default {
   setup() {
     const ser = new Server();
     const query = reactive({
-      keyWord: "",
+      keywords: "",
       page: 1,
       size: 10,
     });
@@ -238,7 +238,7 @@ export default {
     const pageTotal = ref(0);
     // 获取表格数据
     const getData = () => {
-      ser.page(query).then((res) => {
+      ser.req("system/task/page", query).then((res) => {
         res.data.list.forEach((d) => {
           d.nextRunTime = moment(d.nextRunTime).format("YYYY-MM-DD HH:mm:ss");
           d.status = d.status == 1 ? true : false;
@@ -268,7 +268,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          ser.delete({ ids: rows.id }).then((res) => {
+          ser.req("system/task/delete", { ids: rows.id }).then((res) => {
             if (res.code == 1000) {
               ElMessage.success(`删除成功`);
               getData();
@@ -308,7 +308,7 @@ export default {
       form.status = form.status ? 1 : 0;
       form.every = form.every || 0;
       form.limit = form.limit || 0;
-      ser.add(form).then((res) => {
+      ser.req("system/task/add", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`添加成功`);
           addVisible.value = false;
@@ -329,7 +329,7 @@ export default {
       form.status = form.status ? 1 : 0;
       form.every = form.every || 0;
       form.limit = form.limit || 0;
-      ser.update(form).then((res) => {
+      ser.req("system/task/update", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
           editVisible.value = false;
@@ -366,7 +366,7 @@ export default {
         title.value = `[${row.name}]日志`;
         logQuery.taskId = row.id;
       }
-      ser.log(logQuery).then((res) => {
+      ser.req("system/task_log/page", logQuery).then((res) => {
         if (res.code == 1000) {
           res.data.list.forEach((l) => {
             l.createTime = moment(l.createTime).format("MM-DD HH:mm");
@@ -386,7 +386,7 @@ export default {
       log();
     };
     const doNow = (id) => {
-      ser.doNow({ id }).then((res) => {
+      ser.req("system/task/doNow", { id }).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`执行成功`);
           getData();

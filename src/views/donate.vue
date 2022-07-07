@@ -8,12 +8,12 @@
       </el-breadcrumb>
     </div>
     <div class="container">
-      <h2>
-        该后台框架基于前端作者的
-        <a href="https://lin-xin.gitee.io/example/work/">vue-manage-system</a>
-        开发，如果你觉得该框架对你有帮助，那就请他们喝杯饮料吧！
-      </h2>
-      <div class="plugins-tips">前端框架作者微信号：linxin_20</div>
+      <h2>如果你觉得该框架对你有帮助，那就请他们喝杯饮料吧！</h2>
+      <div class="plugins-tips">
+        前端框架作者微信号：linxin_20，前端框架
+        <a href="https://lin-xin.gitee.io/article/29/"> vue-manage-system </a>
+        文档说明
+      </div>
       <div>
         <img src="https://lin-xin.gitee.io/images/weixin.jpg" width="200" />
       </div>

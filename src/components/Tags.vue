@@ -36,7 +36,7 @@
 import { computed } from "vue";
 import { useStore } from "vuex";
 import { onBeforeRouteUpdate, useRoute, useRouter } from "vue-router";
-import { Server } from "../api/admin";
+import { Server } from "../api/api";
 import { ElMessage } from "element-plus";
 
 export default {
@@ -116,11 +116,15 @@ export default {
       //获取用户信息
       const ser = new Server();
       ser
-        .userInfo(token)
+        .req("system/user/userInfo")
         .then((res) => {
           if (res.code == 1000) {
             localStorage.setItem("userinfo", JSON.stringify(res.data));
             localStorage.setItem("menu", JSON.stringify(res.data.menu));
+            localStorage.setItem(
+              "aciotnsList",
+              JSON.stringify(res.data.aciotnsList)
+            );
           }
         })
         .catch((err) => {

@@ -9,15 +9,20 @@
     </div>
     <div class="container">
       <div class="handle-box">
-        <el-button type="primary" @click="handleSearch">刷新</el-button>
-        <el-button type="primary" @click="handleAdd">添加</el-button>
+        <el-button type="primary" @click="handleSearch" size="mini"
+          >刷新</el-button
+        >
+        <el-button type="primary" @click="handleAdd" size="mini"
+          >添加</el-button
+        >
         <el-input
           v-model="query.keywords"
+          size="mini"
           placeholder="名称/key"
           class="handle-input mr10"
           clearable
         ></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+        <el-button type="primary" @click="handleSearch" size="mini"
           >搜索</el-button
         >
       </div>
@@ -75,10 +80,10 @@
           <el-input v-model="form.key" disabled></el-input>
         </el-form-item>
         <el-form-item label="值">
-          <el-input v-model="form.value"></el-input>
+          <el-input v-model="form.value" type="textarea"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="form.remark"></el-input>
+          <el-input v-model="form.remark" type="textarea"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -95,10 +100,10 @@
           <el-input v-model="form.key"></el-input>
         </el-form-item>
         <el-form-item label="值">
-          <el-input v-model="form.value"></el-input>
+          <el-input v-model="form.value" type="textarea"></el-input>
         </el-form-item>
         <el-form-item label="备注">
-          <el-input v-model="form.remark"></el-input>
+          <el-input v-model="form.remark" type="textarea"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -114,7 +119,7 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/param";
+import { Server } from "../api/api";
 import moment from "moment";
 export default {
   name: "basetable",
@@ -130,7 +135,7 @@ export default {
     const pageTotal = ref(0);
     // 获取表格数据
     const getData = () => {
-      ser.page(query).then((res) => {
+      ser.req("system/param/page", query).then((res) => {
         res.data.list.forEach((l) => {
           l.createTime = moment(l.createTime).format("MM-DD HH:mm");
         });
@@ -163,7 +168,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          ser.delete({ ids: rows.id }).then((res) => {
+          ser.req("system/param/delete", { ids: rows.id }).then((res) => {
             if (res.code == 1000) {
               ElMessage.success(`删除成功`);
               getData();
@@ -193,7 +198,7 @@ export default {
     };
     const saveEdit = () => {
       editVisible.value = false;
-      ser.update(form).then((res) => {
+      ser.req("system/param/update", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
           getData();
@@ -201,16 +206,13 @@ export default {
           ElMessage.error(`修改失败:${res.message}`);
         }
       });
-      // Object.keys(form).forEach((item) => {
-      //   tableData.value[idx][item] = form[item];
-      // });
     };
     const addVisible = ref(false);
     const handleAdd = () => {
       addVisible.value = true;
     };
     const saveAdd = () => {
-      ser.add(form).then((res) => {
+      ser.req("system/param/add", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`添加成功`);
           addVisible.value = false;
