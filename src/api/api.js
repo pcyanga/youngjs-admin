@@ -3,7 +3,7 @@ import request from "./server";
 export class Server {
   req(path, params = {}, headers = {}) {
     let aciotns = localStorage.getItem("aciotnsList");
-    const aciotnsList = JSON.parse(aciotns);
+    const aciotnsList = JSON.parse(aciotns) || [];
     const find = aciotnsList.filter((a) => {
       return a.indexOf(path) >= 0;
     });
