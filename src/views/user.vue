@@ -103,8 +103,6 @@ export default {
         if (res.code == 1000) {
           localStorage.setItem("username", res.data.nickname);
           ElMessage.success(`修改成功`);
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
     };

@@ -126,11 +126,13 @@ export default {
     // 获取表格数据
     const getData = () => {
       ser.req("business/user/page", query).then((res) => {
-        res.data.list.forEach((d) => {
-          d.createTime = moment(d.createTime).format("MM-DD HH:mm");
-        });
-        tableData.value = res.data.list;
-        pageTotal.value = res.data.pagination.total || 50;
+        if (res.code == 1000) {
+          res.data.list.forEach((d) => {
+            d.createTime = moment(d.createTime).format("MM-DD HH:mm");
+          });
+          tableData.value = res.data.list;
+          pageTotal.value = res.data.pagination.total || 50;
+        }
       });
     };
     getData();
@@ -157,8 +159,6 @@ export default {
             if (res.code == 1000) {
               ElMessage.success(`删除成功`);
               getData();
-            } else {
-              ElMessage.error(`删除失败:${res.message}`);
             }
           });
         })
@@ -180,13 +180,11 @@ export default {
       editVisible.value = true;
     };
     const saveEdit = () => {
-      editVisible.value = false;
       ser.req("business/user/update", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
+          editVisible.value = false;
           getData();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
     };

@@ -239,12 +239,14 @@ export default {
     // 获取表格数据
     const getData = () => {
       ser.req("system/task/page", query).then((res) => {
-        res.data.list.forEach((d) => {
-          d.nextRunTime = moment(d.nextRunTime).format("YYYY-MM-DD HH:mm:ss");
-          d.status = d.status == 1 ? true : false;
-        });
-        tableData.value = res.data.list;
-        pageTotal.value = res.data.pagination.total || 50;
+        if (res.code == 1000) {
+          res.data.list.forEach((d) => {
+            d.nextRunTime = moment(d.nextRunTime).format("YYYY-MM-DD HH:mm:ss");
+            d.status = d.status == 1 ? true : false;
+          });
+          tableData.value = res.data.list;
+          pageTotal.value = res.data.pagination.total || 50;
+        }
       });
     };
     getData();
@@ -272,8 +274,6 @@ export default {
             if (res.code == 1000) {
               ElMessage.success(`删除成功`);
               getData();
-            } else {
-              ElMessage.error(`删除失败:${res.message}`);
             }
           });
         })
@@ -313,8 +313,6 @@ export default {
           ElMessage.success(`添加成功`);
           addVisible.value = false;
           getData();
-        } else {
-          ElMessage.error(`添加失败:${res.message}`);
         }
       });
     };
@@ -334,8 +332,6 @@ export default {
           ElMessage.success(`修改成功`);
           editVisible.value = false;
           getData();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
     };
@@ -346,8 +342,6 @@ export default {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
           getData();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
     };
@@ -376,8 +370,6 @@ export default {
           logQuery.size = res.data.pagination.size;
           logQuery.page = res.data.pagination.page;
           logVisible.value = true;
-        } else {
-          ElMessage.error(`获取失败:${res.message}`);
         }
       });
     };
@@ -390,8 +382,6 @@ export default {
         if (res.code == 1000) {
           ElMessage.success(`执行成功`);
           getData();
-        } else {
-          ElMessage.error(`执行失败:${res.message}`);
         }
       });
     };

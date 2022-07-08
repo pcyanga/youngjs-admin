@@ -136,11 +136,13 @@ export default {
     // 获取表格数据
     const getData = () => {
       ser.req("system/param/page", query).then((res) => {
-        res.data.list.forEach((l) => {
-          l.createTime = moment(l.createTime).format("MM-DD HH:mm");
-        });
-        tableData.value = res.data.list;
-        pageTotal.value = res.data.pagination.total;
+        if (res.code == 1000) {
+          res.data.list.forEach((l) => {
+            l.createTime = moment(l.createTime).format("MM-DD HH:mm");
+          });
+          tableData.value = res.data.list;
+          pageTotal.value = res.data.pagination.total;
+        }
       });
     };
     getData();
@@ -172,8 +174,6 @@ export default {
             if (res.code == 1000) {
               ElMessage.success(`删除成功`);
               getData();
-            } else {
-              ElMessage.error(`删除失败:${res.message}`);
             }
           });
         })
@@ -202,8 +202,6 @@ export default {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
           getData();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
     };
@@ -217,16 +215,10 @@ export default {
           ElMessage.success(`添加成功`);
           addVisible.value = false;
           getData();
-        } else {
-          ElMessage.error(`添加失败:${res.message}`);
         }
       });
-      // Object.keys(form).forEach((item) => {
-      //   tableData.value[idx][item] = form[item];
-      // });
     };
     const dealStatus = (status) => {
-      console.log(status);
       switch (Number(status)) {
         case 0:
           return "未匹配";

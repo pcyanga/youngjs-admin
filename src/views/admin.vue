@@ -206,11 +206,9 @@ export default {
       })
         .then(() => {
           ser.req("system/user/delete", { ids: rows.id }).then((res) => {
-            if (res.code == 1000) {
+            if (res?.code == 1000) {
               ElMessage.success(`删除成功`);
               getData();
-            } else {
-              ElMessage.error(`删除失败:${res.message}`);
             }
           });
         })
@@ -246,9 +244,11 @@ export default {
     };
     const handleEdit = (row) => {
       ser.req("system/user/info", { id: row.id }).then((res) => {
-        Object.keys(form).forEach((item) => {
-          form[item] = res.data[item];
-        });
+        if (res.code == 1000) {
+          Object.keys(form).forEach((item) => {
+            form[item] = res.data[item];
+          });
+        }
       });
       form.password = "";
       form.status = form.status ? true : false;
@@ -263,8 +263,6 @@ export default {
               ElMessage.success(`添加成功`);
               addVisible.value = false;
               getData();
-            } else {
-              ElMessage.error(`添加失败:${res.message}`);
             }
           });
         }
@@ -276,21 +274,14 @@ export default {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
           getData();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
-      // Object.keys(form).forEach((item) => {
-      //   tableData.value[idx][item] = form[item];
-      // });
     };
     const getRoles = () => {
       ser.req("system/role/list").then((res) => {
         if (res.code == 1000) {
           res.data.forEach((d) => (d.id = Number(d.id)));
           roles.value = res.data;
-        } else {
-          ElMessage.error(`角色获取失败:${res.message}`);
         }
       });
     };

@@ -102,7 +102,11 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="图标">
-          <el-input v-model="form.icon" @click="iconPanelShow"></el-input>
+          <el-input
+            v-model="form.icon"
+            @click="iconPanelShow"
+            clearable
+          ></el-input>
           <ul v-if="iconVisible" @blur="iconPanelHidden">
             <li
               class="icon-li"
@@ -159,7 +163,11 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="图标">
-          <el-input v-model="form.icon" @click="iconPanelShow"></el-input>
+          <el-input
+            v-model="form.icon"
+            @click="iconPanelShow"
+            clearable
+          ></el-input>
           <ul v-if="iconVisible" @blur="iconPanelHidden">
             <li
               class="icon-li"
@@ -261,8 +269,6 @@ export default {
           ElMessage.success(`修改成功`);
           editVisible.value = false;
           getAllMenu();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
     };
@@ -290,8 +296,6 @@ export default {
           ElMessage.success(`添加成功`);
           addVisible.value = false;
           getAllMenu();
-        } else {
-          ElMessage.error(`添加失败:${res.message}`);
         }
       });
     };

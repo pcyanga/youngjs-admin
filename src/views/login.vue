@@ -84,8 +84,6 @@ export default {
                     router.push(r);
                   }
                 });
-              } else {
-                ElMessage.error(res.message);
               }
             })
             .catch((err) => {

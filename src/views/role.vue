@@ -156,11 +156,13 @@ export default {
     // 获取表格数据
     const getData = () => {
       ser.req("system/role/page", query).then((res) => {
-        res.data.list.forEach((l) => {
-          l.createTime = moment(l.createTime).format("MM-DD HH:mm");
-        });
-        tableData.value = res.data.list;
-        pageTotal.value = res.data.pagination.total;
+        if (res.code == 1000) {
+          res.data.list.forEach((l) => {
+            l.createTime = moment(l.createTime).format("MM-DD HH:mm");
+          });
+          tableData.value = res.data.list;
+          pageTotal.value = res.data.pagination.total;
+        }
       });
     };
     getData();
@@ -187,8 +189,6 @@ export default {
             if (res.code == 1000) {
               ElMessage.success(`删除成功`);
               getData();
-            } else {
-              ElMessage.error(`删除失败:${res.message}`);
             }
           });
         })
@@ -219,8 +219,6 @@ export default {
       ser.req("system/role/update", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
     };
@@ -241,8 +239,6 @@ export default {
               ElMessage.success(`添加成功`);
               addVisible.value = false;
               getData();
-            } else {
-              ElMessage.error(`添加失败:${res.message}`);
             }
           });
         }
@@ -259,8 +255,6 @@ export default {
             if (leaf.indexOf(Number(r)) < 0) dlist.push(r);
           });
           check.value = dlist;
-        } else {
-          ElMessage.error(`菜单获取失败:${res.message}`);
         }
       });
     };
@@ -272,8 +266,6 @@ export default {
           });
           leaf = _.uniq(leaf);
           data.value = res.data;
-        } else {
-          ElMessage.error(`菜单获取失败:${res.message}`);
         }
       });
     };
