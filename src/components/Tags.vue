@@ -127,13 +127,7 @@ export default {
             );
           }
         })
-        .catch((err) => {
-          const { message } = err;
-          if (message.indexOf("403") >= 0) {
-            ElMessage.error("登录失效,请重新登录");
-            router.push("/login");
-          }
-        });
+        .catch((err) => {});
     }
 
     return {

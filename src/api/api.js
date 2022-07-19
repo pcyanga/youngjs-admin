@@ -40,14 +40,29 @@ export class Server {
         return err;
       });
   }
-  dealError(err) {
+  async dealError(err) {
     const { response, message } = err;
     if (response.status == 403) {
-      ElMessage.error("登录失效,请重新登录");
+      ElMessage({
+        type: "error",
+        message: "登录失效,请重新登录",
+        duration: 3000,
+      });
+      await this.sleep(1000);
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     } else if (response.status == 401) {
       ElMessage.error("没有访问权限,请联系管理员");
     } else {
       ElMessage.error(message);
     }
+  }
+  /**
+   * 休眠
+   * @param ms
+   * @returns
+   */
+  async sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
   }
 }
