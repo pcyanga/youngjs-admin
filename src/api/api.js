@@ -50,7 +50,7 @@ export class Server {
       });
       await this.sleep(1000);
       localStorage.removeItem("token");
-      window.location.href = "/login";
+      window.location.href = "/#/login";
     } else if (response.status == 401) {
       ElMessage.error("没有访问权限,请联系管理员");
     } else {
