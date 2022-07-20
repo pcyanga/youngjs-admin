@@ -338,9 +338,10 @@ export default {
 
     const changeStatus = (data) => {
       data.status = data.status ? 1 : 0;
-      ser.update(data).then((res) => {
+      ser.req("system/task/update", data).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
+          editVisible.value = false;
           getData();
         }
       });
