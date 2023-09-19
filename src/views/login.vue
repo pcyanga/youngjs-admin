@@ -34,6 +34,10 @@
       </el-form>
     </div>
   </div>
+    <div class="icp">
+    {{ `© ${year} ${author} `
+    }}<a href="http://beian.miit.gov.cn/" target="_blank">{{ record }}</a>
+  </div>
 </template>
 
 <script>
@@ -103,11 +107,17 @@ export default {
     };
     const store = useStore();
     store.commit("clearTags");
+    let year = new Date().getFullYear(); // 一般都是最新的一年
+    let author = "pcyang"; // 作者名
+    let record = "闽ICP备16030744号</span>";
     return {
       param,
       rules,
       login,
       submitForm,
+      year,
+      author,
+      record
     };
   },
 };
@@ -154,5 +164,25 @@ export default {
   font-size: 12px;
   line-height: 30px;
   color: #fff;
+}
+.icp {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 10px 0;
+  width: 100%;
+  height: 36px;
+  white-space: pre;
+  text-align: center;
+  color: gray;
+  z-index: 1000;
+}
+.icp > a {
+  color: gray;
+  text-decoration: none;
+}
+.icp > a:hover {
+  color: aqua;
+  text-decoration: none;
 }
 </style>
