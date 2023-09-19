@@ -34,8 +34,7 @@
       </el-form>
     </div>
   </div>
-   </div>
-    <div class="icp">
+  <div class="icp">
     {{ `© ${year} ${author} `
     }}<a href="http://beian.miit.gov.cn/" target="_blank">{{ record }}</a>
   </div>
@@ -119,7 +118,7 @@ export default {
       submitForm,
       year,
       author,
-      record
+      record,
     };
   },
 };
