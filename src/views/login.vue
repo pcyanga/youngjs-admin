@@ -34,6 +34,7 @@
       </el-form>
     </div>
   </div>
+   </div>
     <div class="icp">
     {{ `© ${year} ${author} `
     }}<a href="http://beian.miit.gov.cn/" target="_blank">{{ record }}</a>
@@ -45,7 +46,7 @@ import { ref, reactive } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { Server } from "../api/admin";
+import { Server } from "../api/api";
 import setRouters from "../api/router";
 
 export default {
@@ -74,19 +75,20 @@ export default {
               if (res.code == 1000) {
                 ElMessage.success("登录成功");
                 localStorage.setItem("token", res.data.token);
-                ser.userInfo(res.data.token).then((res) => {
+                ser.req("system/user/userInfo").then((res) => {
                   if (res.code == 1000) {
                     localStorage.setItem("userinfo", JSON.stringify(res.data));
                     localStorage.setItem("menu", JSON.stringify(res.data.menu));
+                    localStorage.setItem(
+                      "aciotnsList",
+                      JSON.stringify(res.data.aciotnsList)
+                    );
                     const menu = setRouters(res.data.menu);
                     router.addRoute(menu);
                     const r = getFirstMenu(res.data.menu) || "/";
-                    console.log(r);
                     router.push(r);
                   }
                 });
-              } else {
-                ElMessage.error(res.message);
               }
             })
             .catch((err) => {

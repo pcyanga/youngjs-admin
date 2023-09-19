@@ -160,7 +160,7 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/admin";
+import { Server } from "../api/api";
 import moment from "moment";
 export default {
   name: "basetable",
@@ -177,7 +177,7 @@ export default {
     const pageTotal = ref(0);
     // 获取表格数据
     const getData = () => {
-      ser.page(query).then((res) => {
+      ser.req("system/user/page", query).then((res) => {
         res.data.list.forEach((l) => {
           l.createTime = moment(l.createTime).format("MM-DD HH:mm");
         });
@@ -205,12 +205,10 @@ export default {
         type: "warning",
       })
         .then(() => {
-          ser.delete({ ids: rows.id }).then((res) => {
-            if (res.code == 1000) {
+          ser.req("system/user/delete", { ids: rows.id }).then((res) => {
+            if (res?.code == 1000) {
               ElMessage.success(`删除成功`);
               getData();
-            } else {
-              ElMessage.error(`删除失败:${res.message}`);
             }
           });
         })
@@ -245,10 +243,12 @@ export default {
       nickname: [{ required: true, message: "请输入昵称", trigger: "blur" }],
     };
     const handleEdit = (row) => {
-      ser.info({ id: row.id }).then((res) => {
-        Object.keys(form).forEach((item) => {
-          form[item] = res.data[item];
-        });
+      ser.req("system/user/info", { id: row.id }).then((res) => {
+        if (res.code == 1000) {
+          Object.keys(form).forEach((item) => {
+            form[item] = res.data[item];
+          });
+        }
       });
       form.password = "";
       form.status = form.status ? true : false;
@@ -257,15 +257,12 @@ export default {
     };
     const saveAdd = () => {
       add.value.validate((valid) => {
-        console.log(valid);
         if (valid) {
-          ser.add(form).then((res) => {
+          ser.req("system/user/add", form).then((res) => {
             if (res.code == 1000) {
               ElMessage.success(`添加成功`);
               addVisible.value = false;
               getData();
-            } else {
-              ElMessage.error(`添加失败:${res.message}`);
             }
           });
         }
@@ -273,26 +270,18 @@ export default {
     };
     const saveEdit = () => {
       editVisible.value = false;
-      ser.update(form).then((res) => {
-        console.log(res);
+      ser.req("system/user/update", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
           getData();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
-      // Object.keys(form).forEach((item) => {
-      //   tableData.value[idx][item] = form[item];
-      // });
     };
     const getRoles = () => {
-      ser.getRoles().then((res) => {
+      ser.req("system/role/list").then((res) => {
         if (res.code == 1000) {
           res.data.forEach((d) => (d.id = Number(d.id)));
           roles.value = res.data;
-        } else {
-          ElMessage.error(`角色获取失败:${res.message}`);
         }
       });
     };

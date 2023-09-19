@@ -91,8 +91,22 @@
         <el-form-item label="路径">
           <el-input v-model="form.key"></el-input>
         </el-form-item>
+        <el-form-item label="权限组">
+          <el-cascader
+            v-model="form.actions"
+            :options="options"
+            :props="props"
+            collapse-tags
+            clearable
+            style="width: 100%"
+          ></el-cascader>
+        </el-form-item>
         <el-form-item label="图标">
-          <el-input v-model="form.icon" @click="iconPanelShow"></el-input>
+          <el-input
+            v-model="form.icon"
+            @click="iconPanelShow"
+            clearable
+          ></el-input>
           <ul v-if="iconVisible" @blur="iconPanelHidden">
             <li
               class="icon-li"
@@ -133,7 +147,10 @@
           <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item label="路径">
-          <el-input v-model="form.key"></el-input>
+          <el-input
+            v-model="form.key"
+            placeholder="文件路径及访问路径一致"
+          ></el-input>
         </el-form-item>
         <el-form-item label="权限组">
           <el-cascader
@@ -142,10 +159,15 @@
             :props="props"
             collapse-tags
             clearable
+            style="width: 100%"
           ></el-cascader>
         </el-form-item>
         <el-form-item label="图标">
-          <el-input v-model="form.icon" @click="iconPanelShow"></el-input>
+          <el-input
+            v-model="form.icon"
+            @click="iconPanelShow"
+            clearable
+          ></el-input>
           <ul v-if="iconVisible" @blur="iconPanelHidden">
             <li
               class="icon-li"
@@ -183,7 +205,7 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/menu";
+import { Server } from "../api/api";
 export default {
   name: "basetable",
   setup() {
@@ -195,7 +217,7 @@ export default {
         type: "warning",
       })
         .then(() => {
-          ser.delete({ ids: data.id }).then((res) => {
+          ser.req("system/menu/delete", { ids: data.id }).then((res) => {
             if (res.code == 1000) {
               ElMessage.success(`删除成功`);
               getAllMenu();
@@ -223,16 +245,30 @@ export default {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
+      const actionsList = [];
+
+      if (form.actions) {
+        const actions = form.actions.split(";");
+        actions.forEach((a) => {
+          const ac = a.split("/");
+          actionsList.push(ac);
+        });
+      }
+      form.actions = actionsList;
       editVisible.value = true;
     };
     const saveEdit = () => {
-      ser.update(form).then((res) => {
+      const actions = [];
+      form.actions.forEach((a) => {
+        const ac = a.join("/");
+        actions.push(ac);
+      });
+      form.actions = actions.join(";");
+      ser.req("system/menu/update", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`修改成功`);
           editVisible.value = false;
           getAllMenu();
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
     };
@@ -245,22 +281,27 @@ export default {
       form.key = "";
       form.sort = 0;
       form.type = 1;
+      form.actions = [];
       addVisible.value = true;
     };
     const saveAdd = () => {
-      ser.add(form).then((res) => {
+      const actions = [];
+      form.actions.forEach((a) => {
+        const ac = a.join("/");
+        actions.push(ac);
+      });
+      form.actions = actions.join(";");
+      ser.req("system/menu/add", form).then((res) => {
         if (res.code == 1000) {
           ElMessage.success(`添加成功`);
           addVisible.value = false;
           getAllMenu();
-        } else {
-          ElMessage.error(`添加失败:${res.message}`);
         }
       });
     };
     const data = ref([]);
     const getAllMenu = () => {
-      ser.getAllMenu().then((res) => {
+      ser.req("system/menu/list").then((res) => {
         if (res.code == 1000) {
           data.value = res.data;
         } else {
@@ -420,7 +461,7 @@ export default {
     };
     const options = ref([]);
     const getRouters = () => {
-      ser.getRouters().then((res) => {
+      ser.req("system/menu/getRouters").then((res) => {
         if (res.code == 1000) {
           options.value = res.data;
         }

@@ -10,11 +10,13 @@
     <div class="container">
       <div class="handle-box">
         <el-input
-          v-model="query.name"
+          v-model="query.keywords"
           placeholder="用户名"
           class="handle-input mr10"
+          size="mini"
+          clearable
         ></el-input>
-        <el-button type="primary" icon="el-icon-search" @click="handleSearch"
+        <el-button type="primary" @click="handleSearch" size="mini"
           >搜索</el-button
         >
       </div>
@@ -31,50 +33,39 @@
           width="55"
           align="center"
         ></el-table-column>
-        <el-table-column prop="name" label="用户名"></el-table-column>
-        <el-table-column label="账户余额">
-          <template #default="scope">￥{{ scope.row.money }}</template>
-        </el-table-column>
+        <el-table-column prop="username" label="用户名"></el-table-column>
+        <el-table-column prop="nickname" label="昵称"></el-table-column>
         <el-table-column label="头像(查看大图)" align="center">
           <template #default="scope">
             <el-image
               class="table-td-thumb"
-              :src="scope.row.thumb"
-              :preview-src-list="[scope.row.thumb]"
+              :src="scope.row.avatar"
+              :preview-src-list="[scope.row.avatar]"
             >
             </el-image>
           </template>
         </el-table-column>
-        <el-table-column prop="address" label="地址"></el-table-column>
         <el-table-column label="状态" align="center">
           <template #default="scope">
-            <el-tag
-              :type="
-                scope.row.state === '成功'
-                  ? 'success'
-                  : scope.row.state === '失败'
-                  ? 'danger'
-                  : ''
-              "
-              >{{ scope.row.state }}</el-tag
-            >
+            <el-tag :type="scope.row.status == 1 ? 'success' : 'danger'">{{
+              scope.row.status == 1 ? "启用" : "禁用"
+            }}</el-tag>
           </template>
         </el-table-column>
-
-        <el-table-column prop="date" label="注册时间"></el-table-column>
+        <el-table-column prop="createTime" label="注册时间"></el-table-column>
         <el-table-column label="操作" width="180" align="center">
           <template #default="scope">
             <el-button
               type="text"
               icon="el-icon-edit"
-              @click="handleEdit(scope.$index, scope.row)"
+              @click="handleEdit(scope.row)"
               >编辑
             </el-button>
             <el-button
               type="text"
               icon="el-icon-delete"
               class="red"
-              @click="handleDelete(scope.$index, scope.row)"
+              @click="handleDelete(scope.row)"
               >删除</el-button
             >
           </template>
@@ -96,10 +87,13 @@
     <el-dialog title="编辑" v-model="editVisible" width="30%">
       <el-form label-width="70px">
         <el-form-item label="用户名">
-          <el-input v-model="form.name"></el-input>
+          <el-input v-model="form.username"></el-input>
         </el-form-item>
-        <el-form-item label="地址">
-          <el-input v-model="form.address"></el-input>
+        <el-form-item label="昵称">
+          <el-input v-model="form.nickname"></el-input>
+        </el-form-item>
+        <el-form-item label="头像">
+          <el-input v-model="form.avatar"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -115,14 +109,15 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { Server } from "../api/admin";
+import { Server } from "../api/api";
+import moment from "moment";
 
 export default {
   name: "basetable",
   setup() {
     const ser = new Server();
     const query = reactive({
-      keyWord: "",
+      keywords: "",
       page: 1,
       size: 10,
     });
@@ -130,33 +125,42 @@ export default {
     const pageTotal = ref(0);
     // 获取表格数据
     const getData = () => {
-      ser.page(query).then((res) => {
-        tableData.value = res.list;
-        pageTotal.value = res.pageTotal || 50;
+      ser.req("business/user/page", query).then((res) => {
+        if (res.code == 1000) {
+          res.data.list.forEach((d) => {
+            d.createTime = moment(d.createTime).format("MM-DD HH:mm");
+          });
+          tableData.value = res.data.list;
+          pageTotal.value = res.data.pagination.total || 50;
+        }
       });
     };
     getData();
 
     // 查询操作
     const handleSearch = () => {
-      query.pageIndex = 1;
+      query.pag = 1;
       getData();
     };
     // 分页导航
     const handlePageChange = (val) => {
-      query.pageIndex = val;
+      query.page = val;
       getData();
     };
 
     // 删除操作
-    const handleDelete = (index) => {
+    const handleDelete = (rows) => {
       // 二次确认删除
       ElMessageBox.confirm("确定要删除吗？", "提示", {
         type: "warning",
       })
         .then(() => {
-          ElMessage.success("删除成功");
-          tableData.value.splice(index, 1);
+          ser.req("business/user/delete", { ids: rows.id }).then((res) => {
+            if (res.code == 1000) {
+              ElMessage.success(`删除成功`);
+              getData();
+            }
+          });
         })
         .catch(() => {});
     };
@@ -164,25 +168,26 @@ export default {
     // 表格编辑时弹窗和保存
     const editVisible = ref(false);
     let form = reactive({
-      name: "",
-      address: "",
+      id: 0,
+      username: "",
+      nickname: "",
+      avatar: "",
     });
-    let idx = -1;
-    const handleEdit = (index, row) => {
-      idx = index;
+    const handleEdit = (row) => {
       Object.keys(form).forEach((item) => {
         form[item] = row[item];
       });
       editVisible.value = true;
     };
     const saveEdit = () => {
-      editVisible.value = false;
-      ElMessage.success(`修改第 ${idx + 1} 行成功`);
-      Object.keys(form).forEach((item) => {
-        tableData.value[idx][item] = form[item];
+      ser.req("business/user/update", form).then((res) => {
+        if (res.code == 1000) {
+          ElMessage.success(`修改成功`);
+          editVisible.value = false;
+          getData();
+        }
       });
     };
-
     return {
       query,
       tableData,

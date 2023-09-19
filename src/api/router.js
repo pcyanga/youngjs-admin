@@ -5,7 +5,16 @@ const setRouters = (menu) => {
     path: "/",
     name: "Home",
     component: Home,
-    children: [],
+    children: [
+      {
+        path: "/",
+        name: "index",
+        meta: {
+          title: "首页",
+        },
+        component: () => import("../views/donate.vue"),
+      },
+    ],
   };
   home.children.push({
     path: "/user",

@@ -82,7 +82,7 @@ import { reactive, ref } from "vue";
 import VueCropper from "vue-cropperjs";
 import "cropperjs/dist/cropper.css";
 import avatar from "../assets/img/img.jpg";
-import { Server } from "../api/admin";
+import { Server } from "../api/api";
 import { ElMessage } from "element-plus";
 export default {
   name: "user",
@@ -99,12 +99,10 @@ export default {
       nickname: userinfo.nickname,
     });
     const onSubmit = () => {
-      ser.update(form).then((res) => {
+      ser.req("system/user/update", form).then((res) => {
         if (res.code == 1000) {
           localStorage.setItem("username", res.data.nickname);
           ElMessage.success(`修改成功`);
-        } else {
-          ElMessage.error(`修改失败:${res.message}`);
         }
       });
     };
