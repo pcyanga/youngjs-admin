@@ -110,7 +110,7 @@ export default {
     store.commit("clearTags");
     let year = new Date().getFullYear(); // 一般都是最新的一年
     let author = "pcyang"; // 作者名
-    let record = "闽ICP备16030744号</span>";
+    let record = "闽ICP备16030744号";
     return {
       param,
       rules,
