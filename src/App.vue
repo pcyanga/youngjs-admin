@@ -1,12 +1,11 @@
-<template>
-    <router-view />
-</template>
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { useAppStore } from '@/store/modules/app'
 
-<script>
-export default {};
+const appStore = useAppStore()
+onMounted(() => appStore.initTheme())
 </script>
 
-<style>
-@import "./assets/css/main.css";
-@import "./assets/css/color-dark.css";
-</style>
+<template>
+  <router-view />
+</template>
